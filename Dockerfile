@@ -14,17 +14,17 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main"
     apt update && apt install -y ros-melodic-desktop-full && \
     echo "source /opt/ros/melodic/setup.bash" >> ~/.bashrc && source ~/.bashrc && \
     apt install -y python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential && \
-    rosdep init && sudo rosdep fix-permissions && rosdep update
+    rosdep init && rosdep update
 
 # install carla-ros bridge
 
-RUN source ~/.bashrc && apt update && apt install -y python-catkin-tools && \
+RUN source /opt/ros/melodic/setup.bash && apt update && apt install -y python-catkin-tools && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1AF1527DE64CB8D9 && \
     add-apt-repository "deb [arch=amd64] http://dist.carla.org/carla $(lsb_release -sc) main" && \
     mkdir -p /root/catkin_ws/src && \
     git clone --recurse-submodules https://github.com/carla-simulator/ros-bridge.git catkin_ws/src/ros-bridge && \
     cd /root/catkin_ws/ && \
-    sudo rosdep fix-permissions && rosdep update && rosdep install --from-paths src --ignore-src -r && \
+    rosdep update && rosdep install -y --from-paths src --ignore-src -r && \
     catkin build && \
     python2 -m pip install carla==0.9.13 pygame && \
     echo "source /root/catkin_ws/devel/setup.bash" >> ~/.bashrc
