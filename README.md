@@ -1,6 +1,6 @@
 # object_detection_and_depth_estimation_with_carla
 
-###Setting up NVIDIA Container Toolkit
+### Setting up NVIDIA Container Toolkit
 
 Setup the package repository and the GPG key
 
@@ -29,13 +29,13 @@ sudo systemctl restart docker
 
 ---
 
-###Pull the CARLA image
+### Pull the CARLA image
 
 ```bash
 docker pull carlasim/carla:0.9.13
 ```
 
-###Run the CARLA container
+### Run the CARLA container
 
 ```bash
 sudo docker run --privileged --gpus all --net=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw carlasim/carla:0.9.13 /bin/bash ./CarlaUE4.sh -RenderOffScreen
@@ -43,13 +43,13 @@ sudo docker run --privileged --gpus all --net=host -v /tmp/.X11-unix:/tmp/.X11-u
 
 ---
 
-###Foward X11
+### Foward X11
 
 ```bash
 xhost +local:docker
 ```
 
-###Build base image
+### Build base image
 
 ```bash
 git clone https://github.com/hanjiho97/object_detection_and_depth_estimation_with_carla.git
@@ -57,7 +57,7 @@ cd object_detection_and_depth_estimation_with_carla
 sudo docker build --tag team2_final:base . 
 ```
 
-###RUN the base container
+### RUN the base container
 
 ```bash
 sudo docker run -it --privileged --gpus all --runtime=nvidia --net=host -e DISPLAY=$DISPLAY team2_final:base
@@ -65,7 +65,7 @@ sudo docker run -it --privileged --gpus all --runtime=nvidia --net=host -e DISPL
 
 ---
 
-###excute program
+### excute program
 
 ```bash
 roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch
