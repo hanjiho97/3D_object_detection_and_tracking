@@ -53,7 +53,7 @@ xhost +local:docker
 
 ```bash
 git clone https://github.com/hanjiho97/object_detection_and_depth_estimation_with_carla.git
-cd object_detection_and_depth_estimation_with_carla
+cd object_detection_and_depth_estimation_with_carla/docker/
 sudo docker build --tag team2_final:base . 
 ```
 
@@ -65,7 +65,7 @@ sudo docker run -it --privileged --gpus all --runtime=nvidia --net=host -e DISPL
 
 ---
 
-### excute program
+### Excute program
 
 ```bash
 roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch

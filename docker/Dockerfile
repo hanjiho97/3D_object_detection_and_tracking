@@ -16,13 +16,14 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main"
     apt install -y python-rosdep python-rosinstall python-rosinstall-generator python-wstool build-essential && \
     rosdep init && rosdep update
 
-# install carla-ros bridge
+# install carla-ros bridge && object_detection_and_depth_estimation_with_carla
 
 RUN source /opt/ros/melodic/setup.bash && apt update && apt install -y python-catkin-tools && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1AF1527DE64CB8D9 && \
     add-apt-repository "deb [arch=amd64] http://dist.carla.org/carla $(lsb_release -sc) main" && \
     mkdir -p /root/catkin_ws/src && \
     git clone --recurse-submodules https://github.com/carla-simulator/ros-bridge.git catkin_ws/src/ros-bridge && \
+    git clone https://github.com/hanjiho97/object_detection_and_depth_estimation_with_carla.git catkin_ws/src/object_detection_and_depth_estimation_with_carla && \
     cd /root/catkin_ws/ && \
     rosdep update && rosdep install -y --from-paths src --ignore-src -r && \
     catkin build && \
@@ -33,5 +34,3 @@ RUN source /opt/ros/melodic/setup.bash && apt update && apt install -y python-ca
 
 RUN apt install -y python3-pip && python3 -m pip install --upgrade pip && \
     python3 -m pip install torch==1.10.1+cu102 torchvision==0.11.2+cu102 torchaudio==0.10.1 -f https://download.pytorch.org/whl/cu102/torch_stable.html
-
-
