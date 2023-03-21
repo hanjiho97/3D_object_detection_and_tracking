@@ -3,13 +3,13 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "modules/EKF.h"
 #include "modules/Measurement.h"
+#include "modules/EKF.h"
 
 class Track
 {
 public:
-  Track();
+  Track(const Measurement& meas, uint id);
   virtual ~Track();
 
   void update_attributes(const Measurement& meas);
@@ -21,8 +21,11 @@ public:
   void set_x(const Eigen::VectorXd& x);
   void set_P(const Eigen::MatrixXd& P);
 
+  void print();
+
 private:
-  double t;
+  uint id_;
+  double t_;
   Eigen::VectorXd x_;
   Eigen::MatrixXd P_;
 };
