@@ -9,14 +9,23 @@
 class Track
 {
 public:
-    Eigen::VectorXd x_;
-    Eigen::MatrixXd P_;
 
-    Eigen::VectorXd get_hx();
-    Eigen::MatrixXd get_H();
-    double get_dt();
+    Track();
+    virtual ~Track();
+
+    void update_attributes(const Measurement& meas);
+
+    Eigen::VectorXd get_x();
+    Eigen::MatrixXd get_P();
+    double get_t();
+
+    void set_x(const Eigen::VectorXd& x);
+    void set_P(const Eigen::MatrixXd& P);
 
 private:
+    double t;
+    Eigen::VectorXd x_;
+    Eigen::MatrixXd P_;
 
 };
 

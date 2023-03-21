@@ -10,49 +10,65 @@ EKF::~EKF()
 
 void EKF::init(const Eigen::MatrixXd& R)
 {
-    R_ = R;
     F_ = Eigen::MatrixXd::Identity(6, 6);
     Q_ = Eigen::MatrixXd::Zero(6, 6);
-    delta_t = 0.0;
+    delta_t_ = 0.0;
 }
 
 
-void EKF::predict(Track& track)
-{
-    if(delta_t != track.get_dt())
+void EKF::predict(const Measurement& meas, Track& track)
+{   
+    double delta_t = meas.get_t() - track.get_t();
+    if(delta_t_ != delta_t)
     {
-        delta_t = track.get_dt();
-        setQ(delta_t);
-        setF(delta_t);
+        delta_t_ = delta_t;
+        set_Q(delta_t);
+        set_F(delta_t);
     }
 
-    track.x_ = F_ * track.x_;
-    track.P_ = F_ * track.P_ * F_.transpose() + Q_;
+    Eigen::VectorXd x = track.get_x();
+    Eigen::MatrixXd P = track.get_P();
+
+    x = F_ * x;
+    P = F_ * P * F_.transpose() + Q_;
+
+    track.set_x(x);
+    track.set_P(P);
 }
 
 void EKF::update(const Measurement& meas, Track& track)
 {
+
+
+    Eigen::VectorXd x = track.get_x();
+    Eigen::MatrixXd P = track.get_P();
+    Eigen::VectorXd hx = meas.get_hx(x);
+    Eigen::MatrixXd H = meas.get_H(x);
     Eigen::VectorXd z = meas.get_z();
-    Eigen::VectorXd hx = track.get_hx();
-    Eigen::MatrixXd H = track.get_H();
+    Eigen::MatrixXd R = meas.get_R();
+
     Eigen::VectorXd y = z - hx;
     Eigen::MatrixXd Ht = H.transpose();
-    Eigen::MatrixXd S = H * track.P_ * Ht + R_;
-    Eigen::MatrixXd K = track.P_ * Ht * S.inverse();
+    Eigen::MatrixXd S = H * P * Ht + R;
+    Eigen::MatrixXd K = P * Ht * S.inverse();
 
-    track.x_ = track.x_ + (K * y);
-    track.P_ = (I_ - K * H) * track.P_;
+    x = x + (K * y);
+    P = (I_ - K * H) * P;
+
+    track.set_x(x);
+    track.set_P(P);
+    track.update_attributes(meas);
 }
 
 
-void EKF::setF(double delta_t)
+void EKF::set_F(double delta_t)
 {
     F_(0, 4) = delta_t;
     F_(1, 5) = delta_t;
     F_(2, 6) = delta_t;
 }
 
-void EKF::setQ(double delta_t)
+void EKF::set_Q(double delta_t)
 {
     double q = 3.0; // process noise parameter
     double q1 = delta_t * q;
