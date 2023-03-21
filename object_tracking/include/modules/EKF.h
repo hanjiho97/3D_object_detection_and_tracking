@@ -4,6 +4,7 @@
 #include <eigen3/Eigen/Dense>
 
 #include "modules/Tracker.h"
+#include "modules/Measurement.h"
 
 class EKF
 {
@@ -13,7 +14,7 @@ public:
 
     void init(const Eigen::MatrixXd& R);
     void predict(Track& track);
-    void update(const Eigen::VectorXd &z, Track& track);
+    void update(const Measurement& meas, Track& track);
 
     void setQ(double delta_t);
     void setF(double delta_t);

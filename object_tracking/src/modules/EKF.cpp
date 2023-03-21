@@ -13,6 +13,7 @@ void EKF::init(const Eigen::MatrixXd& R)
     R_ = R;
     F_ = Eigen::MatrixXd::Identity(6, 6);
     Q_ = Eigen::MatrixXd::Zero(6, 6);
+    delta_t = 0.0;
 }
 
 
@@ -29,8 +30,9 @@ void EKF::predict(Track& track)
     track.P_ = F_ * track.P_ * F_.transpose() + Q_;
 }
 
-void EKF::update(const Eigen::VectorXd &z, Track& track)
+void EKF::update(const Measurement& meas, Track& track)
 {
+    Eigen::VectorXd z = meas.get_z();
     Eigen::VectorXd hx = track.get_hx();
     Eigen::MatrixXd H = track.get_H();
     Eigen::VectorXd y = z - hx;

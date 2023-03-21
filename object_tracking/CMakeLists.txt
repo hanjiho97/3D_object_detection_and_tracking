@@ -16,6 +16,7 @@ include_directories(
 add_library(modules
     src/modules/EKF.cpp
     src/modules/Tracker.cpp
+    src/modules/Measurement.cpp
 )
 
 add_executable(example src/example.cpp)
