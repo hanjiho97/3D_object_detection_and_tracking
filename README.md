@@ -1,4 +1,4 @@
-# object_detection_and_depth_estimation_with_carla
+# Stereo_based_3D_object_tracking
 
 ### Setting up NVIDIA Container Toolkit
 
