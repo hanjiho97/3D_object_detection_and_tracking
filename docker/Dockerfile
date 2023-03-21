@@ -23,7 +23,6 @@ RUN source /opt/ros/melodic/setup.bash && apt update && apt install -y python-ca
     add-apt-repository "deb [arch=amd64] http://dist.carla.org/carla $(lsb_release -sc) main" && \
     mkdir -p /root/catkin_ws/src && \
     git clone --recurse-submodules https://github.com/carla-simulator/ros-bridge.git catkin_ws/src/ros-bridge && \
-    git clone https://github.com/hanjiho97/object_detection_and_depth_estimation_with_carla.git catkin_ws/src/object_detection_and_depth_estimation_with_carla && \
     cd /root/catkin_ws/ && \
     rosdep update && rosdep install -y --from-paths src --ignore-src -r && \
     catkin build && \
