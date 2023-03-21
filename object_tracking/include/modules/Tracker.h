@@ -9,32 +9,28 @@
 class Track
 {
 public:
+  Track();
+  virtual ~Track();
 
-    Track();
-    virtual ~Track();
+  void update_attributes(const Measurement& meas);
 
-    void update_attributes(const Measurement& meas);
+  Eigen::VectorXd get_x();
+  Eigen::MatrixXd get_P();
+  double get_t();
 
-    Eigen::VectorXd get_x();
-    Eigen::MatrixXd get_P();
-    double get_t();
-
-    void set_x(const Eigen::VectorXd& x);
-    void set_P(const Eigen::MatrixXd& P);
+  void set_x(const Eigen::VectorXd& x);
+  void set_P(const Eigen::MatrixXd& P);
 
 private:
-    double t;
-    Eigen::VectorXd x_;
-    Eigen::MatrixXd P_;
-
+  double t;
+  Eigen::VectorXd x_;
+  Eigen::MatrixXd P_;
 };
 
 class TrackManager
 {
 public:
-
 private:
-
 };
 
-#endif // TRACKER_H_
+#endif  // TRACKER_H_

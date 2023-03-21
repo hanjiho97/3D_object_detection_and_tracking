@@ -8,10 +8,11 @@ EKF::~EKF()
 {
 }
 
-void EKF::init(const Eigen::MatrixXd& R)
+void EKF::init()
 {
     F_ = Eigen::MatrixXd::Identity(6, 6);
     Q_ = Eigen::MatrixXd::Zero(6, 6);
+    I_ = Eigen::MatrixXd::Identity(6, 6);
     delta_t_ = 0.0;
 }
 

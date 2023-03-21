@@ -12,7 +12,7 @@ public:
   EKF();
   virtual ~EKF();
 
-  void init(const Eigen::MatrixXd& R);
+  void init();
   void predict(const Measurement& meas, Track& track);
   void update(const Measurement& meas, Track& track);
 
