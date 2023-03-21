@@ -18,11 +18,5 @@ jobs:
       - name: Run clang-format check script
         run: |
           echo "=== clang-format check start ==="
-          ./run-clang-format.py --style file -r lidar_calibration
-          ./run-clang-format.py --style file -r lidar_preprocessing
-          ./run-clang-format.py --style file -r object_dection
-          ./run-clang-format.py --style file -r object_location
-          ./run-clang-format.py --style file -r object_tracking
-          ./run-clang-format.py --style file -r showing_result
-          ./run-clang-format.py --style file -r surround_view_monitor
+          ./run-clang-format.py --style file -r modules
           echo "=== clang-format check finished ==="
