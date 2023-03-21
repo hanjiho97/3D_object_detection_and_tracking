@@ -3,6 +3,8 @@
 
 #include <eigen3/Eigen/Dense>
 
+#include "modules/Tracker.h"
+
 class EKF
 {
 public:
@@ -10,13 +12,13 @@ public:
     virtual ~EKF();
 
     void init(const Eigen::MatrixXd& R);
-    void predict(double delta_t);
-    void update(const Eigen::VectorXd &z);
+    void predict(Track& track);
+    void update(const Eigen::VectorXd &z, Track& track);
 
     void setQ(double delta_t);
     void setF(double delta_t);
 private:
-    double updated_time;
+    double delta_t;
 
     Eigen::MatrixXd F_; // state transition matrix
     Eigen::MatrixXd Q_; // process noise covariance matrix

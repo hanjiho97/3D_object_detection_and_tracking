@@ -1,7 +1,25 @@
 #ifndef TRACKER_H_
 #define TRACKER_H_
 
-class Tracker
+#include <eigen3/Eigen/Dense>
+
+#include "modules/EKF.h"
+
+class Track
+{
+public:
+    Eigen::VectorXd x_;
+    Eigen::MatrixXd P_;
+
+    Eigen::VectorXd get_hx();
+    Eigen::MatrixXd get_H();
+    double get_dt();
+
+private:
+
+};
+
+class TrackManager
 {
 public:
 
