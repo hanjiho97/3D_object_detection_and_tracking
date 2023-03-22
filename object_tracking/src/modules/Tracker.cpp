@@ -43,7 +43,10 @@ double Track::get_t()
   return t_;
 }
 
-void Track::update_attributes(const Measurement& meas) {}
+void Track::update_attributes(const Measurement& meas) 
+{
+  t_ = meas.get_t();
+}
 
 void Track::set_x(const Eigen::VectorXd& x)
 {

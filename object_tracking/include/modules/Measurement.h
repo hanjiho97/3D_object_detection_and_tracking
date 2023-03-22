@@ -23,7 +23,6 @@ public:
 
   void print();
 
-private:
   Eigen::VectorXd z_;  
   Eigen::MatrixXd cam_to_veh_;
   Eigen::MatrixXd veh_to_cam_;
@@ -38,6 +37,10 @@ private:
   double length_;
   double height_;
   double yaw_;
+
+
+private:
+
 };
 
 #endif  // MEASUREMENT_H_
