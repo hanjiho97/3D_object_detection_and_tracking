@@ -1,4 +1,4 @@
-#include "modules/Measurement.h"
+#include "object_tracking/Measurement.h"
 
 Measurement::Measurement()
 {
@@ -10,8 +10,6 @@ Measurement::Measurement()
   R_(1, 1) = sigma_lidar_y * sigma_lidar_y;
   R_(2, 2) = sigma_lidar_z * sigma_lidar_z;
 
-  // TODO : inference 결과로부터 멤버변수들 값 할당.
-  // 현재는 dummy임
   cam_to_veh_ = Eigen::MatrixXd::Identity(4, 4);
   veh_to_cam_ = cam_to_veh_.inverse();
 
@@ -42,7 +40,7 @@ Measurement::Measurement(
   veh_to_cam_.block<3, 4>(0, 0) = calib.velo_to_cam;
   cam_to_veh_ = veh_to_cam_.inverse();
 
-  t_ = static_cast<double>(frame_cnt) * 0.1;  // 수정할 것
+  t_ = static_cast<double>(frame_cnt) * 0.1; 
   z_ = Eigen::VectorXd(3);
   z_ << obj.loc_x, obj.loc_y, obj.loc_z;
   type_ = obj.type;

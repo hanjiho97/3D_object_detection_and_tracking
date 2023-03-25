@@ -13,11 +13,12 @@ include_directories(
     ${Eigen3_INCLUDE_DIR}
 )
 
-add_library(modules
-    src/modules/EKF.cpp
-    src/modules/Tracker.cpp
-    src/modules/Measurement.cpp
+add_library(object_tracking
+    src/object_tracking/EKF.cpp
+    src/object_tracking/Tracker.cpp
+    src/object_tracking/Measurement.cpp
+    src/object_tracking/Association.cpp
 )
 
 add_executable(example src/example.cpp)
-target_link_libraries(example modules)
+target_link_libraries(example object_tracking)

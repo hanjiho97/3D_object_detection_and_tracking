@@ -5,8 +5,8 @@
 
 #include <eigen3/Eigen/Dense>
 
-#include "modules/Measurement.h"
-#include "modules/Tracker.h"
+#include "object_tracking/Measurement.h"
+#include "object_tracking/Tracker.h"
 
 class Track;
 
@@ -15,7 +15,7 @@ class EKF
 public:
   EKF();
   virtual ~EKF();
-  void predict(const Measurement& meas, Track& track);
+  void predict(int frame_cnt, Track& track);
   void update(const Measurement& meas, Track& track);
 
   void set_Q(double delta_t);

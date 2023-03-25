@@ -1,4 +1,4 @@
-#include "modules/EKF.h"
+#include "object_tracking/EKF.h"
 
 EKF::EKF()
 {
@@ -13,10 +13,10 @@ EKF::EKF()
 EKF::~EKF() {}
 
 
-void EKF::predict(const Measurement& meas, Track& track)
+void EKF::predict(int frame_cnt, Track& track)
 {
-  double delta_t = meas.get_t() - track.get_t();
-  if (delta_t_ != delta_t)
+  double delta_t = 0.1 * static_cast<double>(frame_cnt) - track.get_t();
+  if (std::abs(delta_t_ - delta_t) > 0.001)
   {
     delta_t_ = delta_t;
     set_Q(delta_t);
