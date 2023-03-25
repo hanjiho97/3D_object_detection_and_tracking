@@ -84,7 +84,7 @@ void EKF::set_Q(double delta_t)
   Q_(5, 5) = q1;
 }
 
-void EKF::print()
+void EKF::print() const
 {
   std::cout << "EKF print ------------------------------" << std::endl;
   std::cout << "F_ = " << std::endl << F_ << std::endl;

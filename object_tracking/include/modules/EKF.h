@@ -21,7 +21,7 @@ public:
   void set_Q(double delta_t);
   void set_F(double delta_t);
 
-  void print();
+  void print() const;
 
 private:
   double delta_t_;

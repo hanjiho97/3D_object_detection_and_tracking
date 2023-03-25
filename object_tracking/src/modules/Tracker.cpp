@@ -61,9 +61,7 @@ void Track::update_attributes(const Measurement& meas)
   attributes_.height = 0.9 * attributes_.height + 0.1 * meas_attributes.height;
   attributes_.width = 0.9 * attributes_.width + 0.1 * meas_attributes.width;
   attributes_.length = 0.9 * attributes_.length + 0.1 * meas_attributes.length;
-  
 
-  
   double meas_rot_y = attributes_.rot_y;
   attributes_.rot_y = std::acos(
     rot_cam_to_veh_(0, 0) * std::cos(meas_rot_y) +
@@ -80,7 +78,7 @@ void Track::set_P(const Eigen::MatrixXd& P)
   P_ = P;
 }
 
-void Track::print()
+void Track::print() const
 {
   std::cout << "Track print ------------------------------" << std::endl;
   std::cout << "id_ = " << std::endl << id_ << std::endl;

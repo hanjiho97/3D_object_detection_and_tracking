@@ -100,7 +100,7 @@ Eigen::MatrixXd Measurement::get_cam_to_veh() const
   return cam_to_veh_;
 }
 
-void Measurement::print()
+void Measurement::print() const
 {
   std::cout << "Measurement print ------------------------------" << std::endl;
   std::cout << "z_ = " << std::endl << z_ << std::endl;

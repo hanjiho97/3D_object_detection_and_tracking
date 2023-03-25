@@ -15,7 +15,7 @@ int main()
   std::string calib_path = kitti_root_path + "calib/000122.txt";
 
   EKF ekf = EKF();
-  ekf.print();
+  //ekf.print();
 
   std::vector<Kitti_Object> objs;
   load_kitti_label(label_path, objs);
@@ -31,6 +31,19 @@ int main()
     meas_list.push_back(meas);
   }
   
+  std::vector<Track> track_list;
+  track_list.reserve(objs.size());
+  for(int i = 0; i < objs.size(); ++i)
+  {
+    Track track(meas_list[i], i);
+    track_list.push_back(track);
+  }
+
+
+  for(const auto& track : track_list)
+  {
+    track.print();
+  }
 
   return 0;
 }
