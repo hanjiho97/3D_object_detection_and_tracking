@@ -20,5 +20,11 @@ add_library(object_tracking
     src/object_tracking/Association.cpp
 )
 
+target_link_libraries(object_tracking
+    ${Eigen3_LIBS}
+)
+
 add_executable(example src/example.cpp)
-target_link_libraries(example object_tracking)
+target_link_libraries(example 
+    object_tracking
+)

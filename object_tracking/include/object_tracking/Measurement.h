@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 struct Kitti_Object
 {

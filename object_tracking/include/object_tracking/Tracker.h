@@ -2,11 +2,13 @@
 #define TRACKER_H_
 
 #include <cmath>
+#include <vector>
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 #include "object_tracking/EKF.h"
 #include "object_tracking/Measurement.h"
+#include "object_tracking/Association.h"
 
 class Track
 {
@@ -43,7 +45,16 @@ private:
 class TrackManager
 {
 public:
+  TrackManager();
+  virtual ~TrackManager();
+  void add_new_track(const Measurement& meas);
+  void delete_track();
 private:
+  uint current_num_tracks_;
+  std::vector<Track> track_list_;
+  uint last_id_;
+  
+
 };
 
 #endif  // TRACKER_H_

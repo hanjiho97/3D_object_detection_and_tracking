@@ -90,3 +90,14 @@ void Track::print() const
   std::cout << "length_ = " << std::endl << attributes_.length << std::endl;
   std::cout << "yaw_ = " << std::endl << attributes_.rot_y << std::endl;
 }
+
+TrackManager::TrackManager() {}
+TrackManager::~TrackManager() {}
+
+void TrackManager::add_new_track(const Measurement& meas)
+{
+  Track track(meas, ++last_id_);
+  track_list_.push_back(track);
+  ++current_num_tracks_;
+}
+

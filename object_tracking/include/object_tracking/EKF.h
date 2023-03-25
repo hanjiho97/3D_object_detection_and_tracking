@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include <eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 #include "object_tracking/Measurement.h"
 #include "object_tracking/Tracker.h"
