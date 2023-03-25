@@ -22,7 +22,7 @@ Measurement::Measurement()
   width_ = 2.0;
   height_ = 2.0;
   length_ = 2.0;
-  yaw_ = 0.0;
+  rot_y_ = 0.0;
 }
 
 Measurement::Measurement(
@@ -49,7 +49,7 @@ Measurement::Measurement(
   width_ = obj.width;
   height_ = obj.height;
   length_ = obj.length;
-  yaw_ = obj.rot_y;
+  rot_y_ = obj.rot_y;
 }
 
 Measurement::~Measurement() {}
@@ -84,6 +84,16 @@ double Measurement::get_t() const
   return t_;
 }
 
+Attributes Measurement::get_attributes() const
+{
+  Attributes ret;
+  ret.height = height_;
+  ret.length = length_;
+  ret.width = width_;
+  ret.rot_y = rot_y_;
+  return ret;
+}
+
 
 Eigen::MatrixXd Measurement::get_cam_to_veh() const
 {
@@ -102,7 +112,7 @@ void Measurement::print()
   std::cout << "width_ = " << std::endl << width_ << std::endl;
   std::cout << "height_ = " << std::endl << height_ << std::endl;
   std::cout << "length_ = " << std::endl << length_ << std::endl;
-  std::cout << "yaw_ = " << std::endl << yaw_ << std::endl;
+  std::cout << "rot_y_ = " << std::endl << rot_y_ << std::endl;
 }
 
 void load_kitti_label(
