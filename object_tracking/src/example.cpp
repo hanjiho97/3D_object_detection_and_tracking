@@ -1,3 +1,6 @@
+#include <iostream>
+#include <vector>
+
 #include <eigen3/Eigen/Dense>
 
 #include "modules/EKF.h"
@@ -7,36 +10,27 @@
 
 int main()
 {
+  std::string kitti_root_path = "../kitti_data/";
+  std::string label_path = kitti_root_path + "data/000122.txt";
+  std::string calib_path = kitti_root_path + "calib/000122.txt";
 
   EKF ekf = EKF();
   ekf.print();
 
+  std::vector<Kitti_Object> objs;
+  load_kitti_label(label_path, objs);
 
-  Measurement meas = Measurement();
-  meas.print();
+  Kitti_Calib calib = load_kitti_calib(calib_path);
 
-  Track track = Track(meas, 11);
-  track.print();
-
-  meas.z_(0) = 2.0;
-  meas.z_(1) = 3.0;
-  meas.z_(2) = 4.0;
-  meas.t_ = 2.0;
-
-  ekf.predict(meas, track);
-  ekf.update(meas, track);
-  track.print();
-
-
-  meas.z_(0) = 3.0;
-  meas.z_(1) = 4.0;
-  meas.z_(2) = 5.0;
-  meas.t_ = 3.0;
-
-    ekf.predict(meas, track);
-  ekf.update(meas, track);
-
-  track.print();
+  std::vector<Measurement> meas_list;
+  meas_list.reserve(objs.size());
+  int frame_cnt = 0; // 추후에 for loop을 통해 0부터 375 frame까지 반복.
+  for(int i = 0; i < objs.size(); ++i)
+  {
+    Measurement meas(frame_cnt, objs[i], calib);
+    meas_list.push_back(meas);
+  }
+  
 
   return 0;
 }
