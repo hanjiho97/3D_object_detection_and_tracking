@@ -19,6 +19,6 @@ jobs:
         run: |
           echo "=== clang-format check start ==="
           ./run-clang-format.py --style file -r object_tracking
-          ./run-clang-format.py --style file -r object_detectin
+          ./run-clang-format.py --style file -r object_detection
           ./run-clang-format.py --style file -r result_showing
           echo "=== clang-format check finished ==="
