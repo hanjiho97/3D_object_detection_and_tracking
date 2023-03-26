@@ -18,8 +18,8 @@ public:
 
   void update_attributes(const Measurement& meas);
 
-  Eigen::VectorXd get_x() const;
-  Eigen::MatrixXd get_P() const;
+  const Eigen::VectorXd& get_x() const;
+  const Eigen::MatrixXd& get_P() const;
   double get_t() const;
   uint get_id() const;
 
@@ -54,7 +54,7 @@ public:
 
   const std::vector<Track>& get_track_list() const;
 
-  
+
 private:
   uint current_num_tracks_;
   uint last_id_;

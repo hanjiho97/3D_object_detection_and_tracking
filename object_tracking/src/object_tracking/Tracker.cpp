@@ -41,11 +41,11 @@ Track::Track(const Measurement& meas, uint id)
 
 Track::~Track() {}
 
-Eigen::VectorXd Track::get_x() const
+const Eigen::VectorXd& Track::get_x() const
 {
   return x_;
 }
-Eigen::MatrixXd Track::get_P() const
+const Eigen::MatrixXd& Track::get_P() const
 {
   return P_;
 }
