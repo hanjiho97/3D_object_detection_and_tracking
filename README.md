@@ -1,4 +1,4 @@
-# Stereo_based_3D_object_tracking
+# 3D_object_detection_and_tracking
 
 ### Setting up NVIDIA Container Toolkit
 
