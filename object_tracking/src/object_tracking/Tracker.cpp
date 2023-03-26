@@ -41,17 +41,22 @@ Track::Track(const Measurement& meas, uint id)
 
 Track::~Track() {}
 
-Eigen::VectorXd Track::get_x()
+Eigen::VectorXd Track::get_x() const
 {
   return x_;
 }
-Eigen::MatrixXd Track::get_P()
+Eigen::MatrixXd Track::get_P() const
 {
   return P_;
 }
-double Track::get_t()
+double Track::get_t() const
 {
   return t_;
+}
+
+uint Track::get_id() const
+{
+  return id_;
 }
 
 void Track::update_attributes(const Measurement& meas)
@@ -101,3 +106,14 @@ void TrackManager::add_new_track(const Measurement& meas)
   ++current_num_tracks_;
 }
 
+void TrackManager::delete_track(uint id)
+{
+  for(int i = 0; i < track_list_.size(); ++i)
+  {
+    if(track_list_[i].get_id() == id)
+    {
+      track_list_.erase(track_list_.begin() + i);
+      return;
+    }
+  }
+}
