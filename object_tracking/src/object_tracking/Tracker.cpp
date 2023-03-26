@@ -59,6 +59,11 @@ uint Track::get_id() const
   return id_;
 }
 
+const Attributes& Track::get_attributes() const
+{
+  return attributes_;
+}
+
 void Track::update_attributes(const Measurement& meas)
 {
   t_ = meas.get_t();
@@ -116,4 +121,9 @@ void TrackManager::delete_track(uint id)
       return;
     }
   }
+}
+
+const std::vector<Track>& TrackManager::get_track_list() const
+{
+  return track_list_;
 }

@@ -28,7 +28,7 @@ public:
 
   void print() const;
 
-  Attributes get_attributes() const;
+  const Attributes& get_attributes() const;
 
 private:
   uint id_;
@@ -52,11 +52,13 @@ public:
   void add_new_track(const Measurement& meas);
   void delete_track(uint id);
 
-  std::vector<Track> track_list_;
+  const std::vector<Track>& get_track_list() const;
+
+  
 private:
   uint current_num_tracks_;
   uint last_id_;
-  
+  std::vector<Track> track_list_;
 
 };
 
