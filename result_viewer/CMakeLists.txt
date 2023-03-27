@@ -21,6 +21,8 @@ include_directories(
 
 set(RESULT_VIEWER_SOURCE_FILES
     src/result_viewer/Dataloader.cpp
+    src/result_viewer/Projection.cpp
+    src/result_viewer/Viewer.cpp
 )
 
 add_library(result_viewer

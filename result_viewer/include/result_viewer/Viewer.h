@@ -5,6 +5,8 @@
 #include <iostream>
 #include "opencv2/opencv.hpp"
 
+#include "result_viewer/Projection.h"
+
 class Viewer
 {
 public:
