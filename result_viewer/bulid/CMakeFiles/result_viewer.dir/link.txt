@@ -1,2 +1,0 @@
-/usr/bin/ar qc libresult_viewer.a  CMakeFiles/result_viewer.dir/src/result_viewer/Dataloader.cpp.o
-/usr/bin/ranlib libresult_viewer.a

@@ -3,7 +3,7 @@
 Dataloader::Dataloader() 
 {
   string_length_ = 10;
-  frame_id_ = 0;
+  frame_count_ = 0;
   kitti_root_path_ = "../kitti_data";
   calibration_path_ = "/calib/";
   image_path_ = "/image_2/";
@@ -149,12 +149,12 @@ bool Dataloader::load_kitti_image(
   return 0;
 }
 
-kitti::Data Dataloader::get_kitti_data(const uint16_t frame_id)
+kitti::Data Dataloader::get_kitti_data(const uint frame_count)
 {
   kitti::Data kitti_data;
   std::cout << kitti_root_path_ << std::endl;
-  std::string str_sframe_id = std::to_string(frame_id);
-  std::string file_name = std::string(string_length_ - str_sframe_id.length(), '0') + str_sframe_id;
+  std::string str_sframe_count = std::to_string(frame_count);
+  std::string file_name = std::string(string_length_ - str_sframe_count.length(), '0') + str_sframe_count;
   std::string calibration_file_path = kitti_root_path_ + 
     calibration_path_ + file_name + ".txt";
   std::string image_file_path = kitti_root_path_ + 

@@ -1,4 +1,0 @@
-/home/jiho/project/3D_object_detection_and_tracking/result_viewer/bulid/CMakeFiles/rebuild_cache.dir
-/home/jiho/project/3D_object_detection_and_tracking/result_viewer/bulid/CMakeFiles/edit_cache.dir
-/home/jiho/project/3D_object_detection_and_tracking/result_viewer/bulid/CMakeFiles/main.dir
-/home/jiho/project/3D_object_detection_and_tracking/result_viewer/bulid/CMakeFiles/result_viewer.dir
