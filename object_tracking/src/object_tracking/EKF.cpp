@@ -33,18 +33,16 @@ void EKF::predict(uint frame_count, Track& track)
   track.set_P(P);
 }
 
-void EKF::update(const Measurement& meas, Track& track)
+void EKF::update(Track& track, const Measurement& meas)
 {
   Eigen::VectorXd x = track.get_x();
   Eigen::MatrixXd P = track.get_P();
-  Eigen::VectorXd hx = meas.get_hx(x);
   Eigen::MatrixXd H = meas.get_H(x);
-  Eigen::VectorXd z = meas.get_z();
   Eigen::MatrixXd R = meas.get_R();
 
-  Eigen::VectorXd y = z - hx;
+  Eigen::VectorXd y = get_y(track, meas);
   Eigen::MatrixXd Ht = H.transpose();
-  Eigen::MatrixXd S = H * P * Ht + R;
+  Eigen::MatrixXd S = get_S(track, meas);
   Eigen::MatrixXd K = P * Ht * S.inverse();
 
   x = x + (K * y);
@@ -55,6 +53,24 @@ void EKF::update(const Measurement& meas, Track& track)
   track.update_attributes(meas);
 }
 
+Eigen::VectorXd EKF::get_y(const Track& track, const Measurement& meas) const
+{
+  Eigen::VectorXd z = meas.get_z();
+  Eigen::VectorXd x = track.get_x();
+  Eigen::VectorXd hx = meas.get_hx(x);
+
+  return z - hx;
+}
+
+Eigen::MatrixXd EKF::get_S(const Track& track, const Measurement& meas) const
+{
+  Eigen::MatrixXd P = track.get_P();
+  Eigen::MatrixXd x = track.get_x();
+  Eigen::MatrixXd H = meas.get_H(x);
+  Eigen::MatrixXd R = meas.get_R();
+
+  return H * P * H.transpose() + R;
+}
 
 void EKF::set_F(double delta_t)
 {

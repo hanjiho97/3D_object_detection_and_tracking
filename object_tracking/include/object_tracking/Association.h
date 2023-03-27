@@ -13,7 +13,7 @@ public:
     virtual ~Association();
     
 private:
-
+    double MHD(const Track& track, const Measurement& meas, const EKF& ekf);
 };
 
 #endif // ASSOCIATION_H_

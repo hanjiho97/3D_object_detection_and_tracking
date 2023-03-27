@@ -16,11 +16,13 @@ public:
   EKF();
   virtual ~EKF();
   void predict(uint frame_count, Track& track);
-  void update(const Measurement& meas, Track& track);
+  void update(Track& track, const Measurement& meas);
 
   void set_Q(double delta_t);
   void set_F(double delta_t);
 
+  Eigen::VectorXd get_y(const Track& track, const Measurement& meas) const;
+  Eigen::MatrixXd get_S(const Track& track, const Measurement& meas) const;
   void print() const;
 
 private:
