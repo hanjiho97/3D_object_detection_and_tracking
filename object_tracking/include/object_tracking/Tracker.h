@@ -1,6 +1,7 @@
 #ifndef TRACKER_H_
 #define TRACKER_H_
 
+#include <algorithm>
 #include <cmath>
 #include <vector>
 
@@ -23,9 +24,13 @@ public:
   const Eigen::MatrixXd& get_P() const;
   double get_t() const;
   uint get_id() const;
+  double get_score() const;
+  uint get_state() const;
 
   void set_x(const Eigen::VectorXd& x);
   void set_P(const Eigen::MatrixXd& P);
+  void set_score(double score);
+  void set_state(uint state);
 
   void print() const;
 

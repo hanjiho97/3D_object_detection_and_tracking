@@ -10,7 +10,6 @@ Track::Track(const Measurement& meas, uint id)
   pos_cam.block<3, 1>(0, 0) = z;
   Eigen::MatrixXd cam_to_veh = meas.get_cam_to_veh();
   Eigen::VectorXd pos_veh = cam_to_veh * pos_cam;
-
   rot_cam_to_veh_ = cam_to_veh.block<3, 3>(0, 0);
 
   x_ = Eigen::VectorXd::Zero(6);
@@ -30,11 +29,6 @@ Track::Track(const Measurement& meas, uint id)
 
   t_ = meas.get_t();
   attributes_ = meas.get_attributes();
-  double meas_rot_y = attributes_.rot_y;
-  attributes_.rot_y = std::acos(
-    rot_cam_to_veh_(0, 0) * std::cos(meas_rot_y) +
-    rot_cam_to_veh_(0, 1) * std::sin(meas_rot_y));
-
   state_ = 0;
   score_ = 1.0 / 6.0;
 }
@@ -59,6 +53,24 @@ uint Track::get_id() const
   return id_;
 }
 
+double Track::get_score() const
+{
+  return score_;
+}
+uint Track::get_state() const
+{
+  return state_;
+}
+
+void Track::set_score(double score)
+{
+  score_ = score;
+}
+void Track::set_state(uint state)
+{
+  state_ = state;
+}
+
 const Attributes& Track::get_attributes() const
 {
   return attributes_;
@@ -71,11 +83,15 @@ void Track::update_attributes(const Measurement& meas)
   attributes_.height = 0.9 * attributes_.height + 0.1 * meas_attributes.height;
   attributes_.width = 0.9 * attributes_.width + 0.1 * meas_attributes.width;
   attributes_.length = 0.9 * attributes_.length + 0.1 * meas_attributes.length;
+  attributes_.rot_y = meas_attributes.rot_y;
 
-  double meas_rot_y = attributes_.rot_y;
-  attributes_.rot_y = std::acos(
-    rot_cam_to_veh_(0, 0) * std::cos(meas_rot_y) +
-    rot_cam_to_veh_(0, 1) * std::sin(meas_rot_y));
+  Eigen::VectorXd pos_veh = Eigen::VectorXd::Ones(4);
+  pos_veh.block<3, 1>(0, 0) = x_.block<3, 1>(0, 0);
+  Eigen::VectorXd pos_cam = meas.get_veh_to_cam() * pos_veh;
+
+  attributes_.loc_x = pos_cam(0, 0);
+  attributes_.loc_y = pos_cam(1, 0);
+  attributes_.loc_z = pos_cam(2, 0);
 }
 
 void Track::set_x(const Eigen::VectorXd& x)
@@ -101,6 +117,8 @@ void Track::print() const
   std::cout << "yaw_ = " << std::endl << attributes_.rot_y << std::endl;
 }
 
+// TrackManager ---------------------------------------------------------
+
 TrackManager::TrackManager() {}
 TrackManager::~TrackManager() {}
 
@@ -113,9 +131,9 @@ void TrackManager::add_new_track(const Measurement& meas)
 
 void TrackManager::delete_track(uint id)
 {
-  for(int i = 0; i < track_list_.size(); ++i)
+  for (int i = 0; i < track_list_.size(); ++i)
   {
-    if(track_list_[i].get_id() == id)
+    if (track_list_[i].get_id() == id)
     {
       track_list_.erase(track_list_.begin() + i);
       return;
@@ -130,12 +148,22 @@ const std::vector<Track>& TrackManager::get_track_list() const
 
 void TrackManager::handle_updated_track(uint id)
 {
-  for(int i = 0; i < track_list_.size(); ++i)
+  for (auto& track : track_list_)
   {
-    // if(track_list_[i].get_id() == id)
-    // { 
-    //   current_score = track_list_[i].get_score();
-    //   track_list_[i].set_core()
-    // }
+    if (track.get_id() == id)
+    {
+      double current_score = track.get_score();
+      current_score = std::min(1.0, current_score + 1.0 / 6.0);
+      track.set_score(current_score);
+      if (current_score >= 0.8)
+      {
+        track.set_state(2);
+      }
+      else
+      {
+        track.set_state(1);
+      }
+      return;
+    }
   }
 }

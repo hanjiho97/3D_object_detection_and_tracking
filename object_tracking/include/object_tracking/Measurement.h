@@ -27,6 +27,7 @@ public:
   Eigen::VectorXd get_hx(const Eigen::VectorXd &x) const;
   Eigen::MatrixXd get_H(const Eigen::VectorXd &x) const;
   Eigen::MatrixXd get_cam_to_veh() const;
+  Eigen::MatrixXd get_veh_to_cam() const;
   double get_t() const;
   Attributes get_attributes() const;
 

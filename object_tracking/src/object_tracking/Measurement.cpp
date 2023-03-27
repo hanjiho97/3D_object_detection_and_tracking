@@ -87,6 +87,9 @@ double Measurement::get_t() const
 Attributes Measurement::get_attributes() const
 {
   Attributes ret;
+  ret.loc_x = z_(0);
+  ret.loc_y = z_(1);
+  ret.loc_z = z_(2);
   ret.height = height_;
   ret.length = length_;
   ret.width = width_;
@@ -98,6 +101,11 @@ Attributes Measurement::get_attributes() const
 Eigen::MatrixXd Measurement::get_cam_to_veh() const
 {
   return cam_to_veh_;
+}
+
+Eigen::MatrixXd Measurement::get_veh_to_cam() const
+{
+  return veh_to_cam_;
 }
 
 void Measurement::print() const
