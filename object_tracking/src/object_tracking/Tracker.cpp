@@ -127,3 +127,15 @@ const std::vector<Track>& TrackManager::get_track_list() const
 {
   return track_list_;
 }
+
+void TrackManager::handle_updated_track(uint id)
+{
+  for(int i = 0; i < track_list_.size(); ++i)
+  {
+    // if(track_list_[i].get_id() == id)
+    // { 
+    //   current_score = track_list_[i].get_score();
+    //   track_list_[i].set_core()
+    // }
+  }
+}

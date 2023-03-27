@@ -6,6 +6,7 @@
 
 #include <Eigen/Dense>
 
+#include "object_tracking/type.h"
 #include "object_tracking/EKF.h"
 #include "object_tracking/Measurement.h"
 #include "object_tracking/Association.h"

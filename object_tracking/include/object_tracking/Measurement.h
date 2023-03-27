@@ -10,13 +10,8 @@
 
 #include <Eigen/Dense>
 
+#include "object_tracking/type.h"
 #include "object_tracking/Dataloader.h"
-
-struct Attributes
-{
-  double height, width, length;
-  double rot_y;
-};
 
 class Measurement
 {
