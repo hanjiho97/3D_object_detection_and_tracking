@@ -19,7 +19,10 @@ int main(void)
   attributes.width = test_data.labels[0].width;
   attributes.length = test_data.labels[0].length;
   attributes.rot_y = test_data.labels[0].rot_y;
+
+  std::vector<cv::Point> points;
   projection.read_data(attributes, test_data.calibration.P2);
+  points = projection.get_2D_corners();
 
   return 0;
 }
