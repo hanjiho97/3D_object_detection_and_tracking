@@ -2,6 +2,7 @@
 #define VIEWER_H
 
 #include <vector>
+#include <iostream>
 #include "opencv2/opencv.hpp"
 
 class Viewer
@@ -9,10 +10,8 @@ class Viewer
 public:
   Viewer();
   virtual ~Viewer();
-  bool show_image_with_3d_bbox(const cv::Mat& frame);
-  bool draw_3d_bbox(cv::Mat& frame, const std::vector<cv::Point>& 3d_bbox_points);
-private:
-  cv::Mat _frame;
+  void show_result(cv::Mat& image, bool bbox_3D_flag);
+  bool draw_3d_bbox(cv::Mat& image, const std::vector<cv::Point>& bbox_points);
 };
 
 #endif
