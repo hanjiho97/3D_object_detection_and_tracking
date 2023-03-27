@@ -24,9 +24,9 @@ Measurement::Measurement()
 }
 
 Measurement::Measurement(
-  int frame_cnt,
-  const Kitti_Object &obj,
-  const Kitti_Calib &calib)
+  uint frame_count,
+  uint detection_count,
+  const kitti::Data &kitti_data)
 {
   R_ = Eigen::MatrixXd::Zero(3, 3);
   double sigma_lidar_x = 0.1;
@@ -37,17 +37,19 @@ Measurement::Measurement(
   R_(2, 2) = sigma_lidar_z * sigma_lidar_z;
 
   veh_to_cam_ = Eigen::MatrixXd::Identity(4, 4);
-  veh_to_cam_.block<3, 4>(0, 0) = calib.velo_to_cam;
+  veh_to_cam_.block<3, 4>(0, 0) = kitti_data.calibration.velo_to_cam;
   cam_to_veh_ = veh_to_cam_.inverse();
 
-  t_ = static_cast<double>(frame_cnt) * 0.1; 
+  t_ = static_cast<double>(frame_count) * 0.1;
   z_ = Eigen::VectorXd(3);
-  z_ << obj.loc_x, obj.loc_y, obj.loc_z;
-  type_ = obj.type;
-  width_ = obj.width;
-  height_ = obj.height;
-  length_ = obj.length;
-  rot_y_ = obj.rot_y;
+  z_ << kitti_data.labels[detection_count].loc_x,
+    kitti_data.labels[detection_count].loc_y,
+    kitti_data.labels[detection_count].loc_z;
+  type_ = kitti_data.labels[detection_count].type;
+  width_ = kitti_data.labels[detection_count].width;
+  height_ = kitti_data.labels[detection_count].height;
+  length_ = kitti_data.labels[detection_count].length;
+  rot_y_ = kitti_data.labels[detection_count].rot_y;
 }
 
 Measurement::~Measurement() {}
@@ -111,139 +113,4 @@ void Measurement::print() const
   std::cout << "height_ = " << std::endl << height_ << std::endl;
   std::cout << "length_ = " << std::endl << length_ << std::endl;
   std::cout << "rot_y_ = " << std::endl << rot_y_ << std::endl;
-}
-
-void load_kitti_label(
-  const std::string &label_path,
-  std::vector<Kitti_Object> &objs)
-{
-  std::ifstream ifs(label_path);
-  std::string line;
-  if (ifs.is_open())
-  {
-    while (std::getline(ifs, line))
-    {
-      Kitti_Object obj;
-      std::stringstream ss(line);
-      ss >> obj.type >> obj.truncated >> obj.occluded >> obj.alpha >>
-        obj.left >> obj.top >> obj.right >> obj.bottom >> obj.height >>
-        obj.width >> obj.length >> obj.loc_x >> obj.loc_y >> obj.loc_z >>
-        obj.rot_y >> obj.score;
-      objs.push_back(obj);
-    }
-    ifs.close();
-  }
-  else
-  {
-    std::cout << "cannot open label_path : " << label_path << std::endl;
-  }
-}
-
-Kitti_Calib load_kitti_calib(const std::string &calib_path)
-{
-  std::ifstream ifs(calib_path);
-  std::string line;
-  Kitti_Calib calib;
-  double value;
-  if (ifs.is_open())
-  {
-    std::getline(ifs, line);
-    std::stringstream ss(line.substr(4));
-    for (int row = 0; row < 3; ++row)
-    {
-      for (int col = 0; col < 4; ++col)
-      {
-        ss >> value;
-        calib.P0(row, col) = value;
-      }
-    }
-
-    std::getline(ifs, line);
-    ss.clear();
-    ss.str(line.substr(4));
-    for (int row = 0; row < 3; ++row)
-    {
-      for (int col = 0; col < 4; ++col)
-      {
-        ss >> value;
-        calib.P1(row, col) = value;
-      }
-    }
-
-    std::getline(ifs, line);
-    ss.clear();
-    ss.str(line.substr(4));
-    for (int row = 0; row < 3; ++row)
-    {
-      for (int col = 0; col < 4; ++col)
-      {
-        ss >> value;
-        calib.P2(row, col) = value;
-      }
-    }
-
-    std::getline(ifs, line);
-    ss.clear();
-    ss.str(line.substr(4));
-    for (int row = 0; row < 3; ++row)
-    {
-      for (int col = 0; col < 4; ++col)
-      {
-        ss >> value;
-        calib.P3(row, col) = value;
-      }
-    }
-
-    std::getline(ifs, line);
-    ss.clear();
-    ss.str(line.substr(9));
-    for (int row = 0; row < 3; ++row)
-    {
-      for (int col = 0; col < 3; ++col)
-      {
-        ss >> value;
-        calib.R0_rect(row, col) = value;
-      }
-    }
-
-    std::getline(ifs, line);
-    ss.clear();
-    ss.str(line.substr(16));
-    for (int row = 0; row < 3; ++row)
-    {
-      for (int col = 0; col < 4; ++col)
-      {
-        ss >> value;
-        calib.velo_to_cam(row, col) = value;
-      }
-    }
-
-    std::getline(ifs, line);
-    ss.clear();
-    ss.str(line.substr(16));
-    for (int row = 0; row < 3; ++row)
-    {
-      for (int col = 0; col < 4; ++col)
-      {
-        ss >> value;
-        calib.imu_to_velo(row, col) = value;
-      }
-    }
-    ifs.close();
-  }
-  else
-  {
-    std::cout << "cannot open calib_path : " << calib_path << std::endl;
-  }
-
-
-  // std::cout << "P0" << std::endl << calib.P0 << std::endl;
-  // std::cout << "P1" << std::endl << calib.P1 << std::endl;
-  // std::cout << "P2" << std::endl << calib.P2 << std::endl;
-  // std::cout << "P3" << std::endl << calib.P3 << std::endl;
-  // std::cout << "R0" << std::endl << calib.R0_rect << std::endl;
-  // std::cout << "velo2cam" << std::endl << calib.velo_to_cam << std::endl;
-  // std::cout << "imu2velo" << std::endl << calib.imu_to_velo << std::endl;
-
-  return calib;
 }

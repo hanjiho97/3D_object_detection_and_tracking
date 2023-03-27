@@ -7,33 +7,34 @@
 #include "object_tracking/Measurement.h"
 #include "object_tracking/Tracker.h"
 #include "object_tracking/Association.h"
+#include "object_tracking/Dataloader.h"
 
 int main()
 {
-  std::string kitti_root_path = "../kitti_data/";
-  std::string label_path = kitti_root_path + "data/000122.txt";
-  std::string calib_path = kitti_root_path + "calib/000122.txt";
+  // std::string kitti_root_path = "../kitti_data/";
+  // std::string label_path = kitti_root_path + "data/000122.txt";
+  // std::string calib_path = kitti_root_path + "calib/000122.txt";
 
   EKF ekf = EKF();
   //ekf.print();
 
-  std::vector<Kitti_Object> objs;
-  load_kitti_label(label_path, objs);
+  uint frame_count = 71;
 
-  Kitti_Calib calib = load_kitti_calib(calib_path);
+  Dataloader dataloader;
+  kitti::Data test_data;
+  test_data = dataloader.get_kitti_data(frame_count);
 
   std::vector<Measurement> meas_list;
-  meas_list.reserve(objs.size());
-  int frame_cnt = 0; // 추후에 for loop을 통해 0부터 375 frame까지 반복.
-  for(int i = 0; i < objs.size(); ++i)
+  meas_list.reserve(test_data.labels.size());
+  for(int i = 0; i < test_data.labels.size(); ++i)
   {
-    Measurement meas(frame_cnt, objs[i], calib);
+    Measurement meas(frame_count, i, test_data);
     meas_list.push_back(meas);
   }
   
   std::vector<Track> track_list;
-  track_list.reserve(objs.size());
-  for(int i = 0; i < objs.size(); ++i)
+  track_list.reserve(test_data.labels.size());
+  for(int i = 0; i < test_data.labels.size(); ++i)
   {
     Track track(meas_list[i], i);
     track_list.push_back(track);

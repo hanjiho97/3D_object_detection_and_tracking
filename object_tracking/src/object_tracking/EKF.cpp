@@ -13,9 +13,9 @@ EKF::EKF()
 EKF::~EKF() {}
 
 
-void EKF::predict(int frame_cnt, Track& track)
+void EKF::predict(uint frame_count, Track& track)
 {
-  double delta_t = 0.1 * static_cast<double>(frame_cnt) - track.get_t();
+  double delta_t = 0.1 * static_cast<double>(frame_count) - track.get_t();
   if (std::abs(delta_t_ - delta_t) > 0.001)
   {
     delta_t_ = delta_t;

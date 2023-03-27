@@ -53,7 +53,8 @@ public:
   void delete_track(uint id);
 
   const std::vector<Track>& get_track_list() const;
-
+  
+  void handle_updated_track(uint id);
 
 private:
   uint current_num_tracks_;

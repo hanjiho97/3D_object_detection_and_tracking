@@ -15,7 +15,7 @@ class EKF
 public:
   EKF();
   virtual ~EKF();
-  void predict(int frame_cnt, Track& track);
+  void predict(uint frame_count, Track& track);
   void update(const Measurement& meas, Track& track);
 
   void set_Q(double delta_t);

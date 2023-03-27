@@ -10,31 +10,7 @@
 
 #include <Eigen/Dense>
 
-struct Kitti_Object
-{
-  std::string type;
-  double truncated;
-  double occluded;
-  double alpha;
-  double left, top, right, bottom;  // 2D bbox
-  double height, width, length;
-  double loc_x, loc_y, loc_z;  // camera coordinates
-  double rot_y;
-  double score;
-};
-
-struct Kitti_Calib
-{
-  Eigen::Matrix<double, 3, 4> P0, P1, P2, P3;
-  Eigen::Matrix<double, 3, 3> R0_rect;
-  Eigen::Matrix<double, 3, 4> velo_to_cam;
-  Eigen::Matrix<double, 3, 4> imu_to_velo;
-};
-
-void load_kitti_label(
-  const std::string &label_path,
-  std::vector<Kitti_Object> &objs);
-Kitti_Calib load_kitti_calib(const std::string &calib_path);
+#include "object_tracking/Dataloader.h"
 
 struct Attributes
 {
@@ -46,7 +22,9 @@ class Measurement
 {
 public:
   Measurement();
-  Measurement(int frame_cnt, const Kitti_Object &obj, const Kitti_Calib &calib);
+  Measurement(uint frame_count,
+  uint detection_count,
+  const kitti::Data &kitti_data);
   virtual ~Measurement();
 
   Eigen::VectorXd get_z() const;
