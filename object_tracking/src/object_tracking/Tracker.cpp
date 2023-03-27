@@ -136,36 +136,60 @@ const std::map<uint, Track>& TrackManager::get_track_list() const
 void TrackManager::manage_tracks(
   std::vector<uint> unassigned_track_ids,
   std::vector<uint> unassigned_meas_indexes,
-  const Measurement& meas_list)
+  const std::vector<Measurement>& meas_list)
 {
-  for(uint id : unassigned_track_ids)
+  for (uint id : unassigned_track_ids)
   {
-    if(track_list_.find(id) == track_list_.end())
+    if (track_list_.find(id) == track_list_.end())
     {
       continue;
     }
     double current_score = track_list_.at(id).get_score();
     track_list_.at(id).set_score(current_score - 1.0 / 6.0);
   }
+
+  std::vector<uint> track_id_to_delete;
+
+  for (auto iter = track_list_.begin(); iter != track_list_.end(); ++iter)
+  {
+    uint state = iter->second.get_state();
+    double score = iter->second.get_score();
+    const Eigen::Ref<const Eigen::VectorXd> P = iter->second.get_P();
+    if (
+      (state == 2 && score <= 0.6) || (P(0, 0) > 9 || P(1, 1) > 9) ||
+      score < 0.05)
+    {
+      track_id_to_delete.push_back(iter->first);
+    }
+  }
+
+  for (uint id : track_id_to_delete)
+  {
+    track_list_.erase(id);
+  }
+
+  for (uint index : unassigned_meas_indexes)
+  {
+    add_new_track(meas_list[index]);
+  }
 }
 
 void TrackManager::handle_updated_track(uint id)
 {
-      if(track_list_.find(id) == track_list_.end())
-      {
-        return;
-      }
-      double current_score = track_list_.at(id).get_score();
-      
-      current_score = std::min(1.0, current_score + 1.0 / 6.0);
-      track_list_.at(id).set_score(current_score);
-      if (current_score >= 0.8)
-      {
-        track_list_.at(id).set_state(2);
-      }
-      else
-      {
-        track_list_.at(id).set_state(1);
-      }
+  if (track_list_.find(id) == track_list_.end())
+  {
+    return;
+  }
+  double current_score = track_list_.at(id).get_score();
 
+  current_score = std::min(1.0, current_score + 1.0 / 6.0);
+  track_list_.at(id).set_score(current_score);
+  if (current_score >= 0.8)
+  {
+    track_list_.at(id).set_state(2);
+  }
+  else
+  {
+    track_list_.at(id).set_state(1);
+  }
 }

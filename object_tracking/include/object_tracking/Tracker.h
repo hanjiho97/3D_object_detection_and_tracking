@@ -63,7 +63,7 @@ public:
   void manage_tracks(
     std::vector<uint> unassigned_track_ids,
     std::vector<uint> unassigned_meas_idxs,
-    const Measurement& meas_list);
+    const std::vector<Measurement>& meas_list);
   void handle_updated_track(uint id);
 
 private:
