@@ -1,6 +1,6 @@
 #include "result_viewer/Dataloader.h"
 
-Dataloader::Dataloader() 
+Dataloader::Dataloader()
 {
   string_length_ = 10;
   frame_count_ = 0;
@@ -125,25 +125,23 @@ bool Dataloader::load_kitti_label(
   {
     kitti::Label label;
     std::stringstream ss(line);
-    ss >> label.type >> label.truncated >> label.occluded >> 
-    label.alpha >> label.left >> label.top >> label.right >> 
-    label.bottom >> label.height >> label.width >> label.length >> 
-    label.loc_x >> label.loc_y >> label.loc_z >> label.rot_y >> 
-    label.score;
+    ss >> label.type >> label.truncated >> label.occluded >> label.alpha >>
+      label.left >> label.top >> label.right >> label.bottom >> label.height >>
+      label.width >> label.length >> label.loc_x >> label.loc_y >>
+      label.loc_z >> label.rot_y >> label.score;
     labels.push_back(label);
   }
   ifs.close();
   return 0;
 }
 
-bool Dataloader::load_kitti_image(
-  const std::string& image_path,
-  cv::Mat& image)
+bool Dataloader::load_kitti_image(const std::string& image_path, cv::Mat& image)
 {
   image = cv::imread(image_path, cv::IMREAD_ANYCOLOR);
   if (image.empty())
   {
-    std::cout << "cannot load image from image_path : !" << image_path << std::endl;
+    std::cout << "cannot load image from image_path : !" << image_path
+              << std::endl;
     return -1;
   }
   return 0;
@@ -153,13 +151,15 @@ kitti::Data Dataloader::get_kitti_data(const uint frame_count)
 {
   kitti::Data kitti_data;
   std::string str_sframe_count = std::to_string(frame_count);
-  std::string file_name = std::string(string_length_ - str_sframe_count.length(), '0') + str_sframe_count;
-  std::string calibration_file_path = kitti_root_path_ + 
-    calibration_path_ + file_name + ".txt";
-  std::string image_file_path = kitti_root_path_ + 
-    image_path_ + file_name + ".png";
-  std::string label_file_path = kitti_root_path_ + 
-    label_path_ + file_name + ".txt";
+  std::string file_name =
+    std::string(string_length_ - str_sframe_count.length(), '0') +
+    str_sframe_count;
+  std::string calibration_file_path =
+    kitti_root_path_ + calibration_path_ + file_name + ".txt";
+  std::string image_file_path =
+    kitti_root_path_ + image_path_ + file_name + ".png";
+  std::string label_file_path =
+    kitti_root_path_ + label_path_ + file_name + ".txt";
   load_kitti_calibration(calibration_file_path, kitti_data.calibration);
   load_kitti_image(image_file_path, kitti_data.image);
   load_kitti_label(label_file_path, kitti_data.labels);

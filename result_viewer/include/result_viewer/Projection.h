@@ -1,8 +1,8 @@
 #ifndef PROJECTION_H
 #define PROJECTION_H
 
-#include <vector>
 #include <cmath>
+#include <vector>
 #include "Eigen/Dense"
 #include "opencv2/opencv.hpp"
 
@@ -14,7 +14,7 @@ public:
   Projection();
   virtual ~Projection();
   void read_data(
-    const Attributes& attributes, 
+    const Attributes& attributes,
     const Eigen::Matrix<double, 3, 4> P2);
   std::vector<cv::Point> get_2D_corners();
 
@@ -26,7 +26,7 @@ private:
   Eigen::Matrix<double, 3, 4> P2_;
   Attributes attributes_;
 
-  void set_3D_corners( 
+  void set_3D_corners(
     Eigen::Matrix<double, 3, 14>& corners1_3D,
     Eigen::Matrix<double, 3, 14>& corners2_3D,
     const Attributes& attributes);

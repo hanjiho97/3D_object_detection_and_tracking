@@ -18,11 +18,9 @@ public:
   virtual ~Dataloader();
 
   bool load_kitti_calibration(
-    const std::string& calibration_path, 
+    const std::string& calibration_path,
     kitti::Calibration& calibration_data);
-  bool load_kitti_image(
-    const std::string& image_path,
-    cv::Mat& image);
+  bool load_kitti_image(const std::string& image_path, cv::Mat& image);
   bool load_kitti_label(
     const std::string& label_path,
     std::vector<kitti::Label>& labels);

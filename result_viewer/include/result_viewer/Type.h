@@ -35,7 +35,7 @@ struct Data
   cv::Mat image;
   std::vector<kitti::Label> labels;
 };
-}  //namespace Kitti
+}  // namespace kitti
 
 struct Attributes
 {
