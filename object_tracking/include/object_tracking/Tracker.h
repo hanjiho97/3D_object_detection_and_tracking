@@ -3,14 +3,15 @@
 
 #include <algorithm>
 #include <cmath>
+#include <map>
 #include <vector>
 
 #include <Eigen/Dense>
 
 #include "object_tracking/type.h"
+#include "object_tracking/Association.h"
 #include "object_tracking/EKF.h"
 #include "object_tracking/Measurement.h"
-#include "object_tracking/Association.h"
 
 class Track
 {
@@ -56,17 +57,19 @@ public:
   TrackManager();
   virtual ~TrackManager();
   void add_new_track(const Measurement& meas);
-  void delete_track(uint id);
 
-  const std::vector<Track>& get_track_list() const;
-  
+  const std::map<uint, Track>& get_track_list() const;
+
+  void manage_tracks(
+    std::vector<uint> unassigned_track_ids,
+    std::vector<uint> unassigned_meas_idxs,
+    const Measurement& meas_list);
   void handle_updated_track(uint id);
 
 private:
   uint current_num_tracks_;
   uint last_id_;
-  std::vector<Track> track_list_;
-
+  std::map<uint, Track> track_list_;
 };
 
 #endif  // TRACKER_H_

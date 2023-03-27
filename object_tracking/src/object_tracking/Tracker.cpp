@@ -1,6 +1,5 @@
 #include "object_tracking/Tracker.h"
 
-
 Track::Track(const Measurement& meas, uint id)
 {
   id_ = id;
@@ -125,45 +124,48 @@ TrackManager::~TrackManager() {}
 void TrackManager::add_new_track(const Measurement& meas)
 {
   Track track(meas, ++last_id_);
-  track_list_.push_back(track);
+  track_list_.insert({track.get_id(), track});
   ++current_num_tracks_;
 }
 
-void TrackManager::delete_track(uint id)
-{
-  for (int i = 0; i < track_list_.size(); ++i)
-  {
-    if (track_list_[i].get_id() == id)
-    {
-      track_list_.erase(track_list_.begin() + i);
-      return;
-    }
-  }
-}
-
-const std::vector<Track>& TrackManager::get_track_list() const
+const std::map<uint, Track>& TrackManager::get_track_list() const
 {
   return track_list_;
 }
 
+void TrackManager::manage_tracks(
+  std::vector<uint> unassigned_track_ids,
+  std::vector<uint> unassigned_meas_indexes,
+  const Measurement& meas_list)
+{
+  for(uint id : unassigned_track_ids)
+  {
+    if(track_list_.find(id) == track_list_.end())
+    {
+      continue;
+    }
+    double current_score = track_list_.at(id).get_score();
+    track_list_.at(id).set_score(current_score - 1.0 / 6.0);
+  }
+}
+
 void TrackManager::handle_updated_track(uint id)
 {
-  for (auto& track : track_list_)
-  {
-    if (track.get_id() == id)
-    {
-      double current_score = track.get_score();
+      if(track_list_.find(id) == track_list_.end())
+      {
+        return;
+      }
+      double current_score = track_list_.at(id).get_score();
+      
       current_score = std::min(1.0, current_score + 1.0 / 6.0);
-      track.set_score(current_score);
+      track_list_.at(id).set_score(current_score);
       if (current_score >= 0.8)
       {
-        track.set_state(2);
+        track_list_.at(id).set_state(2);
       }
       else
       {
-        track.set_state(1);
+        track_list_.at(id).set_state(1);
       }
-      return;
-    }
-  }
+
 }

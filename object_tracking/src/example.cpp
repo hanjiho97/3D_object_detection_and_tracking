@@ -47,19 +47,18 @@ int main()
     const Eigen::Ref<const Eigen::VectorXd> x = track.get_x();
     const Attributes& attr = track.get_attributes();
     std::cout << "x : " << x << std:: endl;
-    std::cout << "attr" << attr.height << attr.length << attr.width << attr.rot_y << std::endl;
+    std::cout << "attr" << attr.height << " " << attr.length << " " << attr.width  << " "<< attr.rot_y << std::endl;
   }
 
   TrackManager tm = TrackManager();
   tm.add_new_track(meas_list[0]);
   const auto& track_list2 = tm.get_track_list();
-  for(const auto& track : track_list2)
+  for(const auto& pair : track_list2)
   {
-    const Attributes& attr = track.get_attributes();
-    uint id = track.get_id();
+    const Attributes& attr = pair.second.get_attributes();
+    uint id = pair.second.get_id();
     std::cout << attr.height << " " << id << std::endl;
   }
-
 
   return 0;
 }
