@@ -24,5 +24,10 @@ int main(void)
   projection.read_data(attributes, test_data.calibration.P2);
   points = projection.get_2D_corners();
 
+  bool show_bbox_3D=true;
+  bool showing_head=true;
+  viewer.read_data(test_data.image, points);
+  viewer.show_result(show_bbox_3D, showing_head);
+
   return 0;
 }
