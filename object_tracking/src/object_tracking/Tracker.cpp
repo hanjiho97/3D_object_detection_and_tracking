@@ -174,8 +174,9 @@ void TrackManager::manage_tracks(
   }
 }
 
-void TrackManager::handle_updated_track(uint id)
+void TrackManager::update_track(uint id, const Measurement& meas, EKF& ekf)
 {
+  ekf.update(track_list_.at(id), meas);
   if (track_list_.find(id) == track_list_.end())
   {
     return;

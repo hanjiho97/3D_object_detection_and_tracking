@@ -8,10 +8,12 @@
 
 #include <Eigen/Dense>
 
-#include "object_tracking/type.h"
 #include "object_tracking/Association.h"
 #include "object_tracking/EKF.h"
 #include "object_tracking/Measurement.h"
+#include "object_tracking/type.h"
+
+class EKF;
 
 class Track
 {
@@ -64,7 +66,7 @@ public:
     std::vector<uint> unassigned_track_ids,
     std::vector<uint> unassigned_meas_idxs,
     const std::vector<Measurement>& meas_list);
-  void handle_updated_track(uint id);
+  void update_track(uint id, const Measurement& meas, EKF& ekf);
 
 private:
   uint current_num_tracks_;
