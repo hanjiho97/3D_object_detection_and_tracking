@@ -33,6 +33,7 @@ void Association::associate(
   uint row(0), col(0);
   for (const auto& track_pair : track_list)
   {
+    col = 0;
     unassigned_track_ids.push_back(track_pair.first);
     for (const auto& meas : meas_list)
     {

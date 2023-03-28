@@ -37,6 +37,12 @@ int main()
       continue;
     }
     association.associate_and_update(track_manager, meas_list, ekf);
+
+    std::map<uint, Track> track_list = track_manager.get_track_list();
+    for(auto& track_pair : track_list)
+    {
+      track_pair.second.get_attributes();
+    }
   }
 
 

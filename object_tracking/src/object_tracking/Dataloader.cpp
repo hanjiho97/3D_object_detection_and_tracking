@@ -152,7 +152,6 @@ bool Dataloader::load_kitti_image(
 kitti::Data Dataloader::get_kitti_data(const uint frame_count)
 {
   kitti::Data kitti_data;
-  std::cout << kitti_root_path_ << std::endl;
   std::string str_sframe_count = std::to_string(frame_count);
   std::string file_name = std::string(string_length_ - str_sframe_count.length(), '0') + str_sframe_count;
   std::string calibration_file_path = kitti_root_path_ + 
