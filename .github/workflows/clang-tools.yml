@@ -2,9 +2,9 @@ name: clang-format
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "development"  ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "development" ]
   workflow_dispatch:
 
 jobs:
@@ -18,7 +18,5 @@ jobs:
       - name: Run clang-format check script
         run: |
           echo "=== clang-format check start ==="
-          ./run-clang-format.py --style file -r object_tracking
-          ./run-clang-format.py --style file -r object_detection
-          ./run-clang-format.py --style file -r result_viewer
+          ./run-clang-format.py --style file -r 3d_detection_and_tracking
           echo "=== clang-format check finished ==="

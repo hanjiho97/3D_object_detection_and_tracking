@@ -56,5 +56,5 @@ CATKIN_IGNORE
 # for mac user
 .DS_STORE
 
-thirdparty/
-image_2/
+# kitti data
+kitti_data/
