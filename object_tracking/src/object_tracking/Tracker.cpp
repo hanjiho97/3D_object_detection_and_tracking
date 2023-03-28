@@ -158,7 +158,7 @@ void TrackManager::manage_tracks(
   {
     uint state = iter->second.get_state();
     double score = iter->second.get_score();
-    const Eigen::Ref<const Eigen::VectorXd> P = iter->second.get_P();
+    Eigen::MatrixXd P = iter->second.get_P();
     if (
       (state == 2 && score <= 0.6) || (P(0, 0) > 9 || P(1, 1) > 9) ||
       score < 0.05)
