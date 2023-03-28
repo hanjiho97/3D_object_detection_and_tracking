@@ -21,6 +21,7 @@ void Association::associate(
   unassigned_meas_indexes.clear();
   unassigned_track_ids.reserve(N);
   unassigned_meas_indexes.reserve(M);
+ 
   association_matrix =
     Eigen::MatrixXd::Constant(N, M, std::numeric_limits<double>::max());
 
@@ -91,7 +92,6 @@ void Association::associate_and_update(
   EKF& ekf)
 {
   associate(track_manager, meas_list, ekf);
-
   while (association_matrix.rows() > 0 && association_matrix.cols() > 0)
   {
     int ret;
@@ -106,5 +106,5 @@ void Association::associate_and_update(
     track_manager.update_track(track_id, meas_list[meas_index], ekf);
   }
 
-  track_manager.manage_tracks(unassigned_meas_indexes, unassigned_meas_indexes, meas_list);
+  track_manager.manage_tracks(unassigned_track_ids, unassigned_meas_indexes, meas_list);
 }

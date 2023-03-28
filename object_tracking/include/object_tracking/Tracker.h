@@ -30,6 +30,7 @@ public:
   double get_score() const;
   uint get_state() const;
 
+  void set_t(double t);
   void set_x(const Eigen::VectorXd& x);
   void set_P(const Eigen::MatrixXd& P);
   void set_score(double score);
@@ -66,8 +67,10 @@ public:
     std::vector<uint> unassigned_track_ids,
     std::vector<uint> unassigned_meas_idxs,
     const std::vector<Measurement>& meas_list);
+  void predict_tracks(uint frame_count, EKF& ekf);
   void update_track(uint id, const Measurement& meas, EKF& ekf);
 
+  void print();
 private:
   uint current_num_tracks_;
   uint last_id_;
