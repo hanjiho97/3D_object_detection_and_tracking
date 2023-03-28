@@ -150,7 +150,6 @@ bool Dataloader::load_kitti_image(const std::string& image_path, cv::Mat& image)
 kitti::Data Dataloader::get_kitti_data(const uint frame_count)
 {
   kitti::Data kitti_data;
-  std::cout << kitti_root_path_ << std::endl;
   std::string str_sframe_count = std::to_string(frame_count);
   std::string file_name =
     std::string(string_length_ - str_sframe_count.length(), '0') +
@@ -161,7 +160,6 @@ kitti::Data Dataloader::get_kitti_data(const uint frame_count)
     kitti_root_path_ + image_path_ + file_name + ".png";
   std::string label_file_path =
     kitti_root_path_ + label_path_ + file_name + ".txt";
-  std::cout << calibration_file_path << std::endl;
   load_kitti_calibration(calibration_file_path, kitti_data.calibration);
   load_kitti_image(image_file_path, kitti_data.image);
   load_kitti_label(label_file_path, kitti_data.labels);

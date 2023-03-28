@@ -13,17 +13,19 @@ public:
   Viewer();
   virtual ~Viewer();
   void show_result(bool show_bbox_3D, bool showing_head);
-  void draw_3d_bbox(cv::Mat& image, const std::vector<cv::Point>& bbox_points);
+  void draw_3d_bbox(
+    cv::Mat& image, 
+    const std::vector<std::vector<cv::Point>>& bbox_points_list);
   void draw_3d_bbox_head(
     cv::Mat& image,
-    const std::vector<cv::Point>& bbox_points);
+    const std::vector<std::vector<cv::Point>>& bbox_points_list);
 
   void read_data(
     const cv::Mat& image,
-    const std::vector<cv::Point>& bbox_points);
+    const std::vector<std::vector<cv::Point>>& bbox_points_list);
 
 private:
-  std::vector<cv::Point> bbox_points_;
+  std::vector<std::vector<cv::Point>> bbox_points_list_;
   cv::Mat image_;
 };
 
