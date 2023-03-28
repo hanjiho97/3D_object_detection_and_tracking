@@ -70,6 +70,11 @@ void Track::set_state(uint state)
   state_ = state;
 }
 
+void Track::set_t(double t)
+{
+  t_ = t;
+}
+
 const Attributes& Track::get_attributes() const
 {
   return attributes_;
@@ -77,7 +82,6 @@ const Attributes& Track::get_attributes() const
 
 void Track::update_attributes(const Measurement& meas)
 {
-  t_ = meas.get_t();
   Attributes meas_attributes = meas.get_attributes();
   attributes_.height = 0.9 * attributes_.height + 0.1 * meas_attributes.height;
   attributes_.width = 0.9 * attributes_.width + 0.1 * meas_attributes.width;
@@ -118,7 +122,11 @@ void Track::print() const
 
 // TrackManager ---------------------------------------------------------
 
-TrackManager::TrackManager() {}
+TrackManager::TrackManager() 
+{
+  last_id_ = 0;
+  current_num_tracks_ = 0;
+}
 TrackManager::~TrackManager() {}
 
 void TrackManager::add_new_track(const Measurement& meas)
@@ -154,7 +162,7 @@ void TrackManager::manage_tracks(
   {
     uint state = iter->second.get_state();
     double score = iter->second.get_score();
-    const Eigen::Ref<const Eigen::VectorXd> P = iter->second.get_P();
+    Eigen::MatrixXd P = iter->second.get_P();
     if (
       (state == 2 && score <= 0.6) || (P(0, 0) > 9 || P(1, 1) > 9) ||
       score < 0.05)
@@ -174,8 +182,17 @@ void TrackManager::manage_tracks(
   }
 }
 
-void TrackManager::handle_updated_track(uint id)
+void TrackManager::predict_tracks(uint frame_count, EKF& ekf)
 {
+  for(auto& track_pair : track_list_)
+  {
+    ekf.predict(frame_count, track_pair.second);
+  }
+}
+
+void TrackManager::update_track(uint id, const Measurement& meas, EKF& ekf)
+{
+  ekf.update(track_list_.at(id), meas);
   if (track_list_.find(id) == track_list_.end())
   {
     return;
@@ -191,5 +208,13 @@ void TrackManager::handle_updated_track(uint id)
   else
   {
     track_list_.at(id).set_state(1);
+  }
+}
+
+void TrackManager::print()
+{
+  for(const auto& track_pair : track_list_)
+  {
+    track_pair.second.print();
   }
 }

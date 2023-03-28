@@ -15,7 +15,8 @@ EKF::~EKF() {}
 
 void EKF::predict(uint frame_count, Track& track)
 {
-  double delta_t = 0.1 * static_cast<double>(frame_count) - track.get_t();
+  double cur_t = 0.1 * static_cast<double>(frame_count);
+  double delta_t = cur_t - track.get_t();
   if (std::abs(delta_t_ - delta_t) > 0.001)
   {
     delta_t_ = delta_t;
@@ -31,6 +32,7 @@ void EKF::predict(uint frame_count, Track& track)
 
   track.set_x(x);
   track.set_P(P);
+  track.set_t(cur_t);
 }
 
 void EKF::update(Track& track, const Measurement& meas)

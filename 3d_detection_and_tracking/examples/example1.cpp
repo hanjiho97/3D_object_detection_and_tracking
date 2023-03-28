@@ -1,65 +1,76 @@
 #include <iostream>
 #include <vector>
 
-#include <eigen3/Eigen/Dense>
+#include "Eigen/Dense"
 
+#include "3d_detection_and_tracking/Type.h"
 #include "object_tracking/Association.h"
 #include "object_tracking/Dataloader.h"
 #include "object_tracking/EKF.h"
 #include "object_tracking/Measurement.h"
 #include "object_tracking/Tracker.h"
+#include "result_viewer/Viewer.h"
+#include "result_viewer/Projection.h"
 
 int main()
 {
-  // std::string kitti_root_path = "../kitti_data/";
-  // std::string label_path = kitti_root_path + "data/000122.txt";
-  // std::string calib_path = kitti_root_path + "calib/000122.txt";
-
+  Dataloader data_loader = Dataloader();
+  kitti::Data kitti_data;
+  TrackManager track_manager = TrackManager();
+  Association association = Association();
   EKF ekf = EKF();
-  // ekf.print();
-
-  uint frame_count = 71;
-
-  Dataloader dataloader;
-  kitti::Data test_data;
-  test_data = dataloader.get_kitti_data(frame_count);
-
   std::vector<Measurement> meas_list;
-  meas_list.reserve(test_data.labels.size());
-  for (int i = 0; i < test_data.labels.size(); ++i)
+  Viewer viewer;
+  Projection projection;
+
+  for(uint frame_count = 0; frame_count <= 375; ++frame_count)
   {
-    Measurement meas(frame_count, i, test_data);
-    meas_list.push_back(meas);
+    kitti_data = data_loader.get_kitti_data(frame_count);
+    meas_list.clear();
+    meas_list.reserve(kitti_data.labels.size());
+    for(uint label_num = 0; label_num < kitti_data.labels.size(); ++label_num)
+    {
+      Measurement meas = Measurement(frame_count, label_num, kitti_data);
+      meas_list.push_back(meas);
+    }
+
+    track_manager.predict_tracks(frame_count, ekf);
+    if(meas_list.empty())
+    {
+      continue;
+    }
+    association.associate_and_update(track_manager, meas_list, ekf);
+
+    Attributes attributes;
+    std::vector<uint> id_list;
+    std::vector<cv::Point> points;
+    std::vector<std::vector<cv::Point>> points_list;
+    bool show_bbox_3D = false;
+    bool showing_head = false;
+    bool showing_id = false;
+    std::map<uint, Track> track_list = track_manager.get_track_list();
+    for(auto& track_pair : track_list)
+    {
+      if (track_pair.second.get_state() == 2)
+      {
+        attributes = track_pair.second.get_attributes();
+        projection.read_data(attributes, kitti_data.calibration.P2);
+        points = projection.get_2D_corners();
+        points_list.push_back(points);
+        id_list.push_back(track_pair.first);
+      }
+    }
+    if (points_list.size() > 0)
+    {
+      show_bbox_3D = true;
+      showing_head = true;
+      showing_id = true;
+    }
+    viewer.read_data(kitti_data.image, points_list, id_list);
+    viewer.show_result(show_bbox_3D, showing_head, showing_id);
   }
 
-  std::vector<Track> track_list;
-  track_list.reserve(test_data.labels.size());
-  for (int i = 0; i < test_data.labels.size(); ++i)
-  {
-    Track track(meas_list[i], i);
-    track_list.push_back(track);
-  }
 
-
-  for (const auto& track : track_list)
-  {
-    track.print();
-    const Eigen::Ref<const Eigen::VectorXd> x = track.get_x();
-    const Attributes& attr = track.get_attributes();
-    std::cout << "x : " << x << std::endl;
-    std::cout << "attr" << attr.height << " " << attr.length << " "
-              << attr.width << " " << attr.rot_y << std::endl;
-  }
-
-  TrackManager tm = TrackManager();
-  tm.add_new_track(meas_list[0]);
-  const auto& track_list2 = tm.get_track_list();
-  for (const auto& pair : track_list2)
-  {
-    const Attributes& attr = pair.second.get_attributes();
-    uint id = pair.second.get_id();
-    std::cout << attr.height << " " << id << std::endl;
-  }
 
   return 0;
 }
