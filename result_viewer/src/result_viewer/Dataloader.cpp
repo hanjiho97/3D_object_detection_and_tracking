@@ -2,7 +2,7 @@
 
 Dataloader::Dataloader()
 {
-  string_length_ = 10;
+  string_length_ = 6;
   frame_count_ = 0;
   kitti_root_path_ = "../kitti_data";
   calibration_path_ = "/calib/";

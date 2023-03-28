@@ -92,15 +92,15 @@ std::vector<cv::Point> Projection::get_2D_corners()
   for (uint8_t col = 0; col < 14; ++col)
   {
     point.x =
-      static_cast<uint16_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
+      static_cast<int16_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
     point.y =
-      static_cast<uint16_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
+      static_cast<int16_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
     points.push_back(point);
 
     point.x =
-      static_cast<uint16_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
+      static_cast<int16_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
     point.y =
-      static_cast<uint16_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
+      static_cast<int16_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
     points.push_back(point);
   }
   return points;
