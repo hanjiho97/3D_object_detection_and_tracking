@@ -158,8 +158,10 @@ kitti::Data Dataloader::get_kitti_data(const uint frame_count)
     kitti_root_path_ + calibration_path_ + file_name + ".txt";
   std::string image_file_path =
     kitti_root_path_ + image_path_ + file_name + ".png";
+  // std::string label_file_path =
+  //   kitti_root_path_ + label_path_ + file_name + ".txt";
   std::string label_file_path =
-    kitti_root_path_ + label_path_ + file_name + ".txt";
+    "/home/haeryong/Documents/virconv_mount/output/" + file_name + ".txt";
   load_kitti_calibration(calibration_file_path, kitti_data.calibration);
   load_kitti_image(image_file_path, kitti_data.image);
   load_kitti_label(label_file_path, kitti_data.labels);

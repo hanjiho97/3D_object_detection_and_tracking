@@ -91,17 +91,20 @@ std::vector<cv::Point> Projection::get_2D_corners()
   project_3D_to_2D(corners2_3D_, P2_, corners2_2D_);
   for (uint8_t col = 0; col < 14; ++col)
   {
+
     point.x =
       static_cast<int16_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
     point.y =
       static_cast<int16_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
     points.push_back(point);
-
+    std::cout << "point 1 : " << point << std::endl;
     point.x =
       static_cast<int16_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
     point.y =
       static_cast<int16_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
     points.push_back(point);
+
+    std::cout << "point 2 : " << point << std::endl;
   }
   return points;
 }
