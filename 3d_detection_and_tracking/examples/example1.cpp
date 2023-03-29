@@ -23,7 +23,7 @@ int main()
   Viewer viewer;
   Projection projection;
 
-  for(uint frame_count = 0; frame_count <= 375; ++frame_count)
+  for(uint frame_count = 0; frame_count <= 1058; ++frame_count)
   {
     kitti_data = data_loader.get_kitti_data(frame_count);
     meas_list.clear();
@@ -35,10 +35,6 @@ int main()
     }
 
     track_manager.predict_tracks(frame_count, ekf);
-    if(meas_list.empty())
-    {
-      continue;
-    }
     association.associate_and_update(track_manager, meas_list, ekf);
 
     Attributes attributes;
