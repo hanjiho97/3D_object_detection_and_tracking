@@ -69,38 +69,35 @@ bool Projection::project_3D_to_2D(
   return 0;
 }
 
-void Projection::read_data(
+std::vector<cv::Point> Projection::get_2D_corners(
   const Attributes& attributes,
-  const Eigen::Matrix<double, 3, 4> P2)
-{
-  attributes_ = attributes;
-  P2_ = P2;
-  return;
-}
-
-std::vector<cv::Point> Projection::get_2D_corners()
+  const Eigen::Matrix<double, 3, 4>& P2)
 {
   std::vector<cv::Point> points;
   cv::Point point;
-  set_3D_corners(corners1_3D_, corners2_3D_, attributes_);
-  rotate_3D_corners(corners1_3D_, attributes_.rot_y);
-  rotate_3D_corners(corners2_3D_, attributes_.rot_y);
-  move_3D_corners_to_world(corners1_3D_, attributes_);
-  move_3D_corners_to_world(corners2_3D_, attributes_);
-  project_3D_to_2D(corners1_3D_, P2_, corners1_2D_);
-  project_3D_to_2D(corners2_3D_, P2_, corners2_2D_);
+  set_3D_corners(corners1_3D_, corners2_3D_, attributes);
+  rotate_3D_corners(corners1_3D_, attributes.rot_y);
+  rotate_3D_corners(corners2_3D_, attributes.rot_y);
+  move_3D_corners_to_world(corners1_3D_, attributes);
+  move_3D_corners_to_world(corners2_3D_, attributes);
+  project_3D_to_2D(corners1_3D_, P2, corners1_2D_);
+  project_3D_to_2D(corners2_3D_, P2, corners2_2D_);
   for (uint8_t col = 0; col < 14; ++col)
   {
+    if (corners1_2D_(2, col) < 0 || corners2_2D_(2, col) < 0)
+    {
+      continue;
+    }
     point.x =
-      static_cast<int16_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
+      static_cast<int32_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
     point.y =
-      static_cast<int16_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
+      static_cast<int32_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
     points.push_back(point);
 
     point.x =
-      static_cast<int16_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
+      static_cast<int32_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
     point.y =
-      static_cast<int16_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
+      static_cast<int32_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
     points.push_back(point);
   }
   return points;

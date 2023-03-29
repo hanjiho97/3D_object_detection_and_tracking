@@ -3,8 +3,10 @@
 
 #include <iostream>
 #include <vector>
+#include <random>
 #include "opencv2/opencv.hpp"
 
+#include "result_viewer/Type.h"
 #include "result_viewer/Projection.h"
 
 class Viewer
@@ -12,19 +14,27 @@ class Viewer
 public:
   Viewer();
   virtual ~Viewer();
-  void show_result(bool show_bbox_3D, bool showing_head);
-  void draw_3d_bbox(cv::Mat& image, const std::vector<cv::Point>& bbox_points);
-  void draw_3d_bbox_head(
-    cv::Mat& image,
-    const std::vector<cv::Point>& bbox_points);
+  void generate_color_map();
+  void draw_3d_bbox(
+    const std::vector<cv::Point>& bbox_points,
+    bool showing_head);
+  void draw_id(cv::Point& centor_point);
+  void draw(bool show_bbox_3D, bool showing_head, bool showing_id);
 
-  void read_data(
-    const cv::Mat& image,
-    const std::vector<cv::Point>& bbox_points);
+  void read_P2_matrix(const Eigen::Matrix<double, 3, 4>& P2);
+  void add_image(const cv::Mat& image);
+  void add_3d_bbox(
+    uint16_t id,
+    const Attributes& attributes);
+  void show_result();
 
 private:
-  std::vector<cv::Point> bbox_points_;
+  uint8_t id_;
   cv::Mat image_;
+  Eigen::Matrix<double, 3, 4> P2_;
+  std::vector<cv::Scalar> color_map_;
+  Attributes attributes_;
+  Projection projection_;
 };
 
 #endif

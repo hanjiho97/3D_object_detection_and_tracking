@@ -58,3 +58,4 @@ CATKIN_IGNORE
 
 # kitti data
 kitti_data/
+kitti_data_t/

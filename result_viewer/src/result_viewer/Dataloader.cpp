@@ -129,7 +129,10 @@ bool Dataloader::load_kitti_label(
       label.left >> label.top >> label.right >> label.bottom >> label.height >>
       label.width >> label.length >> label.loc_x >> label.loc_y >>
       label.loc_z >> label.rot_y >> label.score;
-    labels.push_back(label);
+    if (label.score > 0.7)
+    {
+      labels.push_back(label);
+    }
   }
   ifs.close();
   return 0;
@@ -150,10 +153,10 @@ bool Dataloader::load_kitti_image(const std::string& image_path, cv::Mat& image)
 kitti::Data Dataloader::get_kitti_data(const uint frame_count)
 {
   kitti::Data kitti_data;
-  std::string str_sframe_count = std::to_string(frame_count);
+  std::string str_frame_count = std::to_string(frame_count);
   std::string file_name =
-    std::string(string_length_ - str_sframe_count.length(), '0') +
-    str_sframe_count;
+    std::string(string_length_ - str_frame_count.length(), '0') +
+    str_frame_count;
   std::string calibration_file_path =
     kitti_root_path_ + calibration_path_ + file_name + ".txt";
   std::string image_file_path =
