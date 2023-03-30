@@ -8,11 +8,10 @@
 #include "object_tracking/Measurement.h"
 #include "object_tracking/Tracker.h"
 #include "result_viewer/Viewer.h"
-#include "result_viewer/Projection.h"
 
 int main()
 {
-  kitti::Data kitti_data;
+  
   Dataloader data_loader = Dataloader();
   TrackManager track_manager = TrackManager();
   Association association = Association();
@@ -26,6 +25,7 @@ int main()
 
   for(uint frame_count = 0; frame_count <= 470; ++frame_count)
   {
+    kitti::Data kitti_data;
     kitti_data = data_loader.get_kitti_data(frame_count);
     viewer.read_P2_matrix(kitti_data.calibration.P2);
     viewer.add_image(kitti_data.image);

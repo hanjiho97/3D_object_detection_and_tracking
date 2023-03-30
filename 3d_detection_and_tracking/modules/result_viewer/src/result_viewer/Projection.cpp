@@ -103,14 +103,11 @@ std::vector<cv::Point> Projection::get_2D_corners(
     point.y =
       static_cast<int32_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
     points.push_back(point);
-    std::cout << "point 1 : " << point << std::endl;
     point.x =
       static_cast<int32_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
     point.y =
       static_cast<int32_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
     points.push_back(point);
-
-    std::cout << "point 2 : " << point << std::endl;
   }
   return points;
 }

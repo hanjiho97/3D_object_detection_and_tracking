@@ -10,8 +10,12 @@ int main(void)
   bool showing_head=true;
   bool showing_id=true;
   bool showing_topview=true;
-  for (int frame_count=0; frame_count < 1058; ++frame_count)
+  for (int frame_count=0; frame_count < 447; ++frame_count)
   {
+    if(frame_count == 177)
+    {
+      frame_count += 4;
+    }
     kitti::Data test_data;
     test_data = dataloader.get_kitti_data(frame_count);
     viewer.read_P2_matrix(test_data.calibration.P2);
