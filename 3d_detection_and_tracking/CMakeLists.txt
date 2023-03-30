@@ -7,20 +7,20 @@ include_directories(${Boost_INCLUDE_DIR})
 
 add_subdirectory(modules)
 
-add_executable(example1 examples/example1.cpp)
-target_link_libraries(example1
+add_executable(kitti_detection examples/kitti_detection.cpp)
+target_link_libraries(kitti_detection
     object_tracking
     result_viewer
 )
 
-# add_executable(example2 examples/example2.cpp)
-# target_link_libraries(example2
-#     object_tracking
-#     result_viewer
-# )
+add_executable(kitti_tracking examples/kitti_tracking.cpp)
+target_link_libraries(kitti_tracking
+    object_tracking
+    result_viewer
+)
 
-add_executable(example3 examples/example3.cpp)
-target_link_libraries(example3
+add_executable(real_time_kitti_tracking examples/real_time_kitti_tracking.cpp)
+target_link_libraries(real_time_kitti_tracking
     object_tracking
     result_viewer
     ${Boost_LIBRARIES}

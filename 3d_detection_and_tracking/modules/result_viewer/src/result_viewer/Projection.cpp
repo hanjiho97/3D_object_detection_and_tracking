@@ -1,6 +1,16 @@
 #include "result_viewer/Projection.h"
 
-Projection::Projection() {}
+Projection::Projection() 
+{
+  Eigen::Matrix<double, 3, 14> corners1_3D_ =
+    Eigen::Matrix<double, 3, 14>::Ones();
+  Eigen::Matrix<double, 3, 14> corners2_3D_ =
+    Eigen::Matrix<double, 3, 14>::Ones();
+  Eigen::Matrix<double, 3, 14> corners1_2D_ =
+    Eigen::Matrix<double, 3, 14>::Ones();
+  Eigen::Matrix<double, 3, 14> corners2_2D_ =
+    Eigen::Matrix<double, 3, 14>::Ones();
+}
 
 Projection::~Projection() {}
 
@@ -63,48 +73,89 @@ bool Projection::project_3D_to_2D(
   Eigen::Matrix<double, 3, 14>& corners_2D)
 {
   Eigen::Matrix<double, 4, 14> corners =
-    Eigen::Matrix<double, 4, 14>::Constant(1);
+    Eigen::Matrix<double, 4, 14>::Ones();
   corners.block(0, 0, 3, 14) << corners_3D;
   corners_2D = P2 * corners;
   return 0;
 }
 
-void Projection::read_data(
+std::vector<cv::Point> Projection::get_2D_corners(
   const Attributes& attributes,
-  const Eigen::Matrix<double, 3, 4> P2)
-{
-  attributes_ = attributes;
-  P2_ = P2;
-  return;
-}
-
-std::vector<cv::Point> Projection::get_2D_corners()
+  const Eigen::Matrix<double, 3, 4>& P2)
 {
   std::vector<cv::Point> points;
   cv::Point point;
-  set_3D_corners(corners1_3D_, corners2_3D_, attributes_);
-  rotate_3D_corners(corners1_3D_, attributes_.rot_y);
-  rotate_3D_corners(corners2_3D_, attributes_.rot_y);
-  move_3D_corners_to_world(corners1_3D_, attributes_);
-  move_3D_corners_to_world(corners2_3D_, attributes_);
-  project_3D_to_2D(corners1_3D_, P2_, corners1_2D_);
-  project_3D_to_2D(corners2_3D_, P2_, corners2_2D_);
+  set_3D_corners(corners1_3D_, corners2_3D_, attributes);
+  rotate_3D_corners(corners1_3D_, attributes.rot_y);
+  rotate_3D_corners(corners2_3D_, attributes.rot_y);
+  move_3D_corners_to_world(corners1_3D_, attributes);
+  move_3D_corners_to_world(corners2_3D_, attributes);
+  project_3D_to_2D(corners1_3D_, P2, corners1_2D_);
+  project_3D_to_2D(corners2_3D_, P2, corners2_2D_);
   for (uint8_t col = 0; col < 14; ++col)
   {
-
+    if (corners1_2D_(2, col) < 0 || corners2_2D_(2, col) < 0)
+    {
+      continue;
+    }
     point.x =
-      static_cast<int16_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
+      static_cast<int32_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
     point.y =
-      static_cast<int16_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
+      static_cast<int32_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
     points.push_back(point);
     std::cout << "point 1 : " << point << std::endl;
     point.x =
-      static_cast<int16_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
+      static_cast<int32_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
     point.y =
-      static_cast<int16_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
+      static_cast<int32_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
     points.push_back(point);
 
     std::cout << "point 2 : " << point << std::endl;
   }
+  return points;
+}
+
+std::vector<cv::Point> Projection::get_topview_conrers()
+{
+  std::vector<cv::Point> points;
+  cv::Point point;
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 2) * background::BOX_SCALE);
+  point.y = 
+    background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 2) * background::BOX_SCALE);
+  points.push_back(point);
+
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 3) * background::BOX_SCALE);
+  point.y = 
+    background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 3) * background::BOX_SCALE);
+  points.push_back(point);
+
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 4) * background::BOX_SCALE);
+  point.y = 
+    background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 4) * background::BOX_SCALE);
+  points.push_back(point);
+
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 11) * background::BOX_SCALE);
+  point.y = background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 11) * background::BOX_SCALE);
+  points.push_back(point);
+
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 2) * background::BOX_SCALE);
+  point.y = 
+    background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 2) * background::BOX_SCALE);
+  points.push_back(point);
   return points;
 }

@@ -13,18 +13,16 @@ class Projection
 public:
   Projection();
   virtual ~Projection();
-  void read_data(
+  std::vector<cv::Point> get_2D_corners(
     const Attributes& attributes,
-    const Eigen::Matrix<double, 3, 4> P2);
-  std::vector<cv::Point> get_2D_corners();
+    const Eigen::Matrix<double, 3, 4>& P2);
+  std::vector<cv::Point> get_topview_conrers();
 
 private:
   Eigen::Matrix<double, 3, 14> corners1_3D_;
   Eigen::Matrix<double, 3, 14> corners2_3D_;
   Eigen::Matrix<double, 3, 14> corners1_2D_;
   Eigen::Matrix<double, 3, 14> corners2_2D_;
-  Eigen::Matrix<double, 3, 4> P2_;
-  Attributes attributes_;
 
   void set_3D_corners(
     Eigen::Matrix<double, 3, 14>& corners1_3D,

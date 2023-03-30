@@ -7,7 +7,7 @@
 #include <random>
 #include "opencv2/opencv.hpp"
 
-#include "3d_detection_and_tracking/Type.h"
+#include "result_viewer/Type.h"
 #include "result_viewer/Projection.h"
 
 constexpr uint8_t COLOR_MAP_SIZE = 100;
