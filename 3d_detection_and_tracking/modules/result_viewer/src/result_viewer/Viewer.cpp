@@ -182,7 +182,7 @@ void Viewer::read_P2_matrix(const Eigen::Matrix<double, 3, 4>& P2)
 void Viewer::add_image(const cv::Mat& image)
 {
   image_ = image;
-  background_ = cv::imread("../car/background.png");
+  background_ = cv::imread("../resource/background.png");
 }
 
 void Viewer::add_3d_bbox(
