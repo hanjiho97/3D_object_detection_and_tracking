@@ -44,4 +44,12 @@ struct Attributes
   double rot_y;
 };
 
+namespace background
+{
+constexpr int16_t HEIGHT = 600;
+constexpr int16_t WIDTH = 600;
+constexpr int16_t HALF_WIDTH = 300;
+constexpr int16_t BOX_SCALE = 15;
+}
+
 #endif  // TYPE_H_

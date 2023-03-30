@@ -1,5 +1,4 @@
 #include "result_viewer/Dataloader.h"
-#include "result_viewer/Projection.h"
 #include "result_viewer/Type.h"
 #include "result_viewer/Viewer.h"
 
@@ -7,7 +6,10 @@ int main(void)
 {
   Dataloader dataloader;
   Viewer viewer;
-  viewer.generate_color_map();
+  bool show_bbox_3D=true;
+  bool showing_head=true;
+  bool showing_id=true;
+  bool showing_topview=true;
   for (int frame_count=0; frame_count < 1058; ++frame_count)
   {
     kitti::Data test_data;
@@ -17,7 +19,7 @@ int main(void)
     Attributes attributes;
     if (test_data.labels.size() > 0)
     {
-      for (int index=0; index < 3; ++index)
+      for (int index=0; index < test_data.labels.size(); ++index)
       {
         attributes.loc_x = test_data.labels[index].loc_x;
         attributes.loc_y = test_data.labels[index].loc_y;
@@ -27,11 +29,12 @@ int main(void)
         attributes.length = test_data.labels[index].length;
         attributes.rot_y = test_data.labels[index].rot_y;
         uint16_t id = index;
-        bool show_bbox_3D=true;
-        bool showing_head=true;
-        bool showing_id=true;
         viewer.add_3d_bbox(id, attributes);
-        viewer.draw(show_bbox_3D, showing_head, showing_id);
+        viewer.draw(
+          show_bbox_3D, 
+          showing_head, 
+          showing_id,
+          showing_topview);
       }
     }
     viewer.show_result();

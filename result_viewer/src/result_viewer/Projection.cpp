@@ -1,6 +1,16 @@
 #include "result_viewer/Projection.h"
 
-Projection::Projection() {}
+Projection::Projection() 
+{
+  Eigen::Matrix<double, 3, 14> corners1_3D_ =
+    Eigen::Matrix<double, 3, 14>::Ones();
+  Eigen::Matrix<double, 3, 14> corners2_3D_ =
+    Eigen::Matrix<double, 3, 14>::Ones();
+  Eigen::Matrix<double, 3, 14> corners1_2D_ =
+    Eigen::Matrix<double, 3, 14>::Ones();
+  Eigen::Matrix<double, 3, 14> corners2_2D_ =
+    Eigen::Matrix<double, 3, 14>::Ones();
+}
 
 Projection::~Projection() {}
 
@@ -63,7 +73,7 @@ bool Projection::project_3D_to_2D(
   Eigen::Matrix<double, 3, 14>& corners_2D)
 {
   Eigen::Matrix<double, 4, 14> corners =
-    Eigen::Matrix<double, 4, 14>::Constant(1);
+    Eigen::Matrix<double, 4, 14>::Ones();
   corners.block(0, 0, 3, 14) << corners_3D;
   corners_2D = P2 * corners;
   return 0;
@@ -100,5 +110,50 @@ std::vector<cv::Point> Projection::get_2D_corners(
       static_cast<int32_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
     points.push_back(point);
   }
+  return points;
+}
+
+std::vector<cv::Point> Projection::get_topview_conrers()
+{
+  std::vector<cv::Point> points;
+  cv::Point point;
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 2) * background::BOX_SCALE);
+  point.y = 
+    background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 2) * background::BOX_SCALE);
+  points.push_back(point);
+
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 3) * background::BOX_SCALE);
+  point.y = 
+    background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 3) * background::BOX_SCALE);
+  points.push_back(point);
+
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 4) * background::BOX_SCALE);
+  point.y = 
+    background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 4) * background::BOX_SCALE);
+  points.push_back(point);
+
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 11) * background::BOX_SCALE);
+  point.y = background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 11) * background::BOX_SCALE);
+  points.push_back(point);
+
+  point.x = 
+    background::HALF_WIDTH + 
+    static_cast<int16_t>(corners2_3D_(0, 2) * background::BOX_SCALE);
+  point.y = 
+    background::HEIGHT - 
+    static_cast<int16_t>(corners2_3D_(2, 2) * background::BOX_SCALE);
+  points.push_back(point);
   return points;
 }
