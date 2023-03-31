@@ -2,6 +2,7 @@
 #define VIEWER_H
 
 #include <iostream>
+#include <string>
 #include <sstream>
 #include <vector>
 #include <random>
@@ -10,14 +11,14 @@
 #include "3d_detection_and_tracking/Type.h"
 #include "result_viewer/Projection.h"
 
-constexpr uint8_t COLOR_MAP_SIZE = 100;
-
 class Viewer
 {
 public:
   Viewer();
   virtual ~Viewer();
   void generate_color_map();
+  bool load_resource_images(const std::string& resource_path);
+
   void draw_3d_bbox(
     const std::vector<cv::Point>& bbox_points,
     bool showing_head);
@@ -26,6 +27,7 @@ public:
   void draw_topview(const std::vector<cv::Point>& topview_bbox_points);
   void draw_topview_id(const cv::Point& centor_point);
   void draw_topview_position(cv::Point& centor_point);
+  void draw_topview_car(const std::vector<cv::Point>& topview_bbox_points);
   void draw(
     bool show_bbox_3D, 
     bool showing_head, 
@@ -45,6 +47,7 @@ private:
   cv::Mat background_;
   Eigen::Matrix<double, 3, 4> P2_;
   std::vector<cv::Scalar> color_map_;
+  std::vector<cv::Mat> car_list_;
   Attributes attributes_;
   Projection projection_;
 };

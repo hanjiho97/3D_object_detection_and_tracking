@@ -2,7 +2,7 @@
 
 Viewer::Viewer() 
 {
-  background_ = cv::imread("../resource/background.png");
+  load_resource_images("../resource/");
   generate_color_map();
 }
 
@@ -21,6 +21,32 @@ void Viewer::generate_color_map()
     color = cv::Scalar(R, G, B);
     color_map_.push_back(color);
   }
+}
+
+bool Viewer::load_resource_images(const std::string& resource_path)
+{
+  background_ = cv::imread(resource_path + "background.png");
+  if (background_.empty())
+  {
+    std::cout << "cannot load image from resource_path : !" << resource_path + "background.png"
+              << std::endl;
+    return -1;
+  }
+  cv::Mat car_image;
+  std::string file_name;
+  for (uint8_t car_number=1; car_number < 15; ++car_number)
+  {
+    file_name = "car" + std::to_string(car_number) + ".png";
+    car_image = cv::imread(resource_path+file_name);
+    if (background_.empty())
+    {
+      std::cout << "cannot load image from resource_path : !" << resource_path+file_name
+                << std::endl;
+      return -1;
+    }
+    car_list_.push_back(car_image);
+  }
+  return 0;
 }
 
 void Viewer::draw_3d_bbox(
@@ -89,18 +115,19 @@ void Viewer::draw_topview(const std::vector<cv::Point>& topview_bbox_points)
   }
   draw_topview_id(id_point);
   draw_topview_position(xyz_point);
+  draw_topview_car(topview_bbox_points);
 }
 
 void Viewer::draw_topview_id(const cv::Point& centor_point)
 {
   cv::putText(
-  background_, 
-  "id:"+std::to_string(id_), 
-  centor_point, 
+  background_,
+  "id:"+std::to_string(id_),
+  centor_point,
   cv::FONT_HERSHEY_DUPLEX, 
-  0.5, 
-  color_map_[id_%100], 
-  1, 
+  0.5,
+  color_map_[id_%100],
+  1,
   cv::LINE_AA);
 }
 
@@ -109,13 +136,13 @@ void Viewer::draw_topview_position(cv::Point& centor_point)
   std::stringstream ss;
   ss << std::fixed << std::setprecision(2) << attributes_.loc_x;
   cv::putText(
-  background_, 
+  background_,
   "x:"+ss.str()+"m",
   centor_point,
-  cv::FONT_HERSHEY_DUPLEX, 
-  0.4, 
-  color_map_[id_%100], 
-  1, 
+  cv::FONT_HERSHEY_DUPLEX,
+  0.4,
+  color_map_[id_%100],
+  1,
   cv::LINE_AA);
 
   ss.str("");
@@ -145,6 +172,38 @@ void Viewer::draw_topview_position(cv::Point& centor_point)
   color_map_[id_%100], 
   1, 
   cv::LINE_AA);
+}
+
+void Viewer::draw_topview_car(const std::vector<cv::Point>& topview_bbox_points)
+{
+  cv::Mat resize_car;
+  cv::Mat moved_car;
+  cv::resize(
+    car_list_[id_%14], 
+    resize_car,
+    cv::Size(
+      attributes_.height*background::BOX_SCALE,
+      attributes_.length*background::BOX_SCALE));
+
+  std::vector<cv::Point2f> src_point;
+  std::vector<cv::Point2f> dst_point;
+
+  for (int index=0; index<4; ++index)
+  {
+    dst_point.push_back(cv::Point2f(topview_bbox_points[index].x, topview_bbox_points[index].y));
+  }
+
+  src_point.push_back(cv::Point2f(resize_car.cols-1, 0));
+  src_point.push_back(cv::Point2f(0, 0));
+  src_point.push_back(cv::Point2f(0, resize_car.rows-1));
+  src_point.push_back(cv::Point2f(resize_car.cols-1, resize_car.rows-1));
+  cv::Mat perspective_matrix = cv::getPerspectiveTransform(src_point, dst_point);
+  cv::warpPerspective(
+    resize_car, 
+    moved_car, 
+    perspective_matrix, 
+    cv::Size(background::HEIGHT, background::WIDTH));
+  cv::subtract(background_, moved_car, background_);
 }
 
 void Viewer::draw(

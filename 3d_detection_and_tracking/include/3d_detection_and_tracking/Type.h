@@ -52,4 +52,6 @@ constexpr int16_t HALF_WIDTH = 300;
 constexpr int16_t BOX_SCALE = 15;
 }
 
+constexpr int8_t COLOR_MAP_SIZE = 100;
+
 #endif  // TYPE_H_
