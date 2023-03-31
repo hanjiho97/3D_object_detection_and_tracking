@@ -2,7 +2,7 @@
 
 Viewer::Viewer() 
 {
-  load_resource_images("../resource/");
+  load_resource_images("../modules/result_viewer/resource/");
   generate_color_map();
 }
 
