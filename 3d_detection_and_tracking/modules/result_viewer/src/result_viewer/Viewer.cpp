@@ -241,7 +241,7 @@ void Viewer::read_P2_matrix(const Eigen::Matrix<double, 3, 4>& P2)
 void Viewer::add_image(const cv::Mat& image)
 {
   image_ = image;
-  background_ = cv::imread("../resource/background.png");
+  background_ = cv::imread("../modules/result_viewer/resource/background.png");
 }
 
 void Viewer::add_3d_bbox(
@@ -256,5 +256,8 @@ void Viewer::show_result()
 {
   cv::imshow("top_view", background_);
   cv::imshow("result_image", image_);
-  cv::waitKey(75);
+  while(cv::waitKey(0) != 'q')
+  {
+    continue;
+  }
 }

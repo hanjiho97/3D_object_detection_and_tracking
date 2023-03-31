@@ -22,6 +22,7 @@ public:
   virtual ~Track();
 
   void update_attributes(const Measurement& meas);
+  void update_location();
 
   const Eigen::VectorXd& get_x() const;
   const Eigen::MatrixXd& get_P() const;
@@ -46,6 +47,7 @@ private:
   Eigen::VectorXd x_;
   Eigen::MatrixXd P_;
 
+  Eigen::MatrixXd veh_to_cam_;
   Eigen::MatrixXd rot_cam_to_veh_;
 
   double score_;

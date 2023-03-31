@@ -10,7 +10,7 @@ Track::Track(const Measurement& meas, uint id)
   Eigen::MatrixXd cam_to_veh = meas.get_cam_to_veh();
   Eigen::VectorXd pos_veh = cam_to_veh * pos_cam;
   rot_cam_to_veh_ = cam_to_veh.block<3, 3>(0, 0);
-
+  veh_to_cam_ = meas.get_veh_to_cam();
   x_ = Eigen::VectorXd::Zero(6);
   x_.block<3, 1>(0, 0) = pos_veh.block<3, 1>(0, 0);
 
@@ -80,6 +80,17 @@ const Attributes& Track::get_attributes() const
   return attributes_;
 }
 
+void Track::update_location()
+{
+  Eigen::VectorXd pos_veh = Eigen::VectorXd::Ones(4);
+  pos_veh.block<3, 1>(0, 0) = x_.block<3, 1>(0, 0);
+  Eigen::VectorXd pos_cam = veh_to_cam_ * pos_veh;
+
+  attributes_.loc_x = pos_cam(0, 0);
+  attributes_.loc_y = pos_cam(1, 0);
+  attributes_.loc_z = pos_cam(2, 0);
+}
+
 void Track::update_attributes(const Measurement& meas)
 {
   Attributes meas_attributes = meas.get_attributes();
@@ -87,14 +98,6 @@ void Track::update_attributes(const Measurement& meas)
   attributes_.width = 0.9 * attributes_.width + 0.1 * meas_attributes.width;
   attributes_.length = 0.9 * attributes_.length + 0.1 * meas_attributes.length;
   attributes_.rot_y = meas_attributes.rot_y;
-
-  Eigen::VectorXd pos_veh = Eigen::VectorXd::Ones(4);
-  pos_veh.block<3, 1>(0, 0) = x_.block<3, 1>(0, 0);
-  Eigen::VectorXd pos_cam = meas.get_veh_to_cam() * pos_veh;
-
-  attributes_.loc_x = pos_cam(0, 0);
-  attributes_.loc_y = pos_cam(1, 0);
-  attributes_.loc_z = pos_cam(2, 0);
 }
 
 void Track::set_x(const Eigen::VectorXd& x)

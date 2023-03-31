@@ -33,6 +33,7 @@ void EKF::predict(uint frame_count, Track& track)
   track.set_x(x);
   track.set_P(P);
   track.set_t(cur_t);
+  track.update_location();
 }
 
 void EKF::update(Track& track, const Measurement& meas)
@@ -52,6 +53,7 @@ void EKF::update(Track& track, const Measurement& meas)
 
   track.set_x(x);
   track.set_P(P);
+  track.update_location();
   track.update_attributes(meas);
 }
 
