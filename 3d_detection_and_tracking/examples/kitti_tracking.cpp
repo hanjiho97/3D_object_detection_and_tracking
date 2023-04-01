@@ -39,6 +39,12 @@ int main()
 
     track_manager.predict_tracks(frame_count, ekf);
     association.associate_and_update(track_manager, meas_list, ekf);
+    std::map<uint, Attributes> attributes_list = track_manager.get_attributes();
+    for(auto& attr_pair : attributes_list)
+    {
+      std::cout << "attr key : " << attr_pair.first << std::endl; 
+      std::cout << "attr val : " << attr_pair.second.height << std::endl;
+    }
     std::map<uint, Track> track_list = track_manager.get_track_list();
     for(auto& track_pair : track_list)
     {

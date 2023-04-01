@@ -41,7 +41,6 @@ int read_pipe()
     str.push_back(char(x));
   }
   std::cout << "str : " << str << std::endl;
-  std::cout << "str len : " << str.size() << std::endl;
   if (!isdigit(str[0]))
   {
     return -1;
@@ -102,6 +101,11 @@ int main()
       association.associate_and_update(track_manager, meas_list, ekf);
     }
 
+    std::map<uint, Attributes> attributes_list = std::move(track_manager.get_attributes());
+    for(auto& attr_pair : attributes_list)
+    {
+      std::cout << "attr key : " << attr_pair.first << std::endl; 
+    }
     std::map<uint, Track> track_list = track_manager.get_track_list();
     for (auto& track_pair : track_list)
     {

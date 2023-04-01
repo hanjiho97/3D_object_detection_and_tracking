@@ -64,6 +64,7 @@ public:
   void add_new_track(const Measurement& meas);
 
   const std::map<uint, Track>& get_track_list() const;
+  std::map<uint, Attributes> get_attributes();
 
   void manage_tracks(
     std::vector<uint> unassigned_track_ids,

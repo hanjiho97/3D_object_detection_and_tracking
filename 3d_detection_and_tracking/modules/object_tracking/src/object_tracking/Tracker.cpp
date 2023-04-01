@@ -144,6 +144,16 @@ const std::map<uint, Track>& TrackManager::get_track_list() const
   return track_list_;
 }
 
+std::map<uint, Attributes> TrackManager::get_attributes()
+{
+  std::map<uint, Attributes> ret;
+  for(const auto& track_pair : track_list_)
+  {
+    ret[track_pair.first] = track_pair.second.get_attributes();
+  }
+  return ret;
+}
+
 void TrackManager::manage_tracks(
   std::vector<uint> unassigned_track_ids,
   std::vector<uint> unassigned_meas_indexes,
