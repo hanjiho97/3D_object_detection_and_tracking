@@ -45,20 +45,20 @@ int main()
       std::cout << "attr key : " << attr_pair.first << std::endl; 
       std::cout << "attr val : " << attr_pair.second.height << std::endl;
     }
-    std::map<uint, Track> track_list = track_manager.get_track_list();
-    for(auto& track_pair : track_list)
-    {
-      if (track_pair.second.get_state() == 2)
-      {
-        viewer.add_3d_bbox(track_pair.first, track_pair.second.get_attributes());
-        viewer.draw(
-        show_bbox_3D, 
-        showing_head, 
-        showing_id,
-        showing_topview);
-      }
-    }
-    viewer.show_result();
+    // std::map<uint, Track> track_list = track_manager.get_track_list();
+    // for(auto& track_pair : track_list)
+    // {
+    //   if (track_pair.second.get_state() == 2)
+    //   {
+    //     viewer.add_3d_bbox(track_pair.first, track_pair.second.get_attributes());
+    //     viewer.draw(
+    //     show_bbox_3D, 
+    //     showing_head, 
+    //     showing_id,
+    //     showing_topview);
+    //   }
+    // }
+    //viewer.show_result();
   }
   return 0;
 }

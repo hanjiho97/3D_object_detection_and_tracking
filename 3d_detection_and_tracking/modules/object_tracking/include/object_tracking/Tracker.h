@@ -21,9 +21,6 @@ public:
   Track(const Measurement& meas, uint id);
   virtual ~Track();
 
-  void update_attributes(const Measurement& meas);
-  void update_location();
-
   const Eigen::VectorXd& get_x() const;
   const Eigen::MatrixXd& get_P() const;
   double get_t() const;
@@ -39,8 +36,6 @@ public:
 
   void print() const;
 
-  const Attributes& get_attributes() const;
-
 private:
   uint id_;
   double t_;
@@ -53,7 +48,6 @@ private:
   double score_;
   uint state_;  // 0 : init, 1 : tentative, 2 : confirmed
 
-  Attributes attributes_;
 };
 
 class TrackManager
@@ -62,9 +56,9 @@ public:
   TrackManager();
   virtual ~TrackManager();
   void add_new_track(const Measurement& meas);
-
+  void delete_track(uint id);
   const std::map<uint, Track>& get_track_list() const;
-  std::map<uint, Attributes> get_attributes();
+  const std::map<uint, Attributes>& get_attributes() const;
 
   void manage_tracks(
     std::vector<uint> unassigned_track_ids,
@@ -75,9 +69,14 @@ public:
 
   void print();
 private:
+
+  void update_location(uint id);
+  void update_attributes(uint id, const Measurement& meas);
+
   uint current_num_tracks_;
   uint last_id_;
   std::map<uint, Track> track_list_;
+  std::map<uint, Attributes> attributes_list_;
 };
 
 #endif  // TRACKER_H_
