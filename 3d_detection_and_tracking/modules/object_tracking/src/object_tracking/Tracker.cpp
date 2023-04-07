@@ -27,7 +27,6 @@ Track::Track(const Measurement& meas, uint id)
   P_(5, 5) = sigma_p66 * sigma_p66;
 
   t_ = meas.get_t();
-  attributes_ = meas.get_attributes();
   state_ = 0;
   score_ = 1.0 / 6.0;
 }
@@ -75,31 +74,6 @@ void Track::set_t(double t)
   t_ = t;
 }
 
-const Attributes& Track::get_attributes() const
-{
-  return attributes_;
-}
-
-void Track::update_location()
-{
-  Eigen::VectorXd pos_veh = Eigen::VectorXd::Ones(4);
-  pos_veh.block<3, 1>(0, 0) = x_.block<3, 1>(0, 0);
-  Eigen::VectorXd pos_cam = veh_to_cam_ * pos_veh;
-
-  attributes_.loc_x = pos_cam(0, 0);
-  attributes_.loc_y = pos_cam(1, 0);
-  attributes_.loc_z = pos_cam(2, 0);
-}
-
-void Track::update_attributes(const Measurement& meas)
-{
-  Attributes meas_attributes = meas.get_attributes();
-  attributes_.height = 0.9 * attributes_.height + 0.1 * meas_attributes.height;
-  attributes_.width = 0.9 * attributes_.width + 0.1 * meas_attributes.width;
-  attributes_.length = 0.9 * attributes_.length + 0.1 * meas_attributes.length;
-  attributes_.rot_y = meas_attributes.rot_y;
-}
-
 void Track::set_x(const Eigen::VectorXd& x)
 {
   x_ = x;
@@ -117,15 +91,11 @@ void Track::print() const
   std::cout << "t_ = " << std::endl << t_ << std::endl;
   std::cout << "x_ = " << std::endl << x_ << std::endl;
   std::cout << "P_ = " << std::endl << P_ << std::endl;
-  std::cout << "width_ = " << std::endl << attributes_.width << std::endl;
-  std::cout << "height_ = " << std::endl << attributes_.height << std::endl;
-  std::cout << "length_ = " << std::endl << attributes_.length << std::endl;
-  std::cout << "yaw_ = " << std::endl << attributes_.rot_y << std::endl;
 }
 
 // TrackManager ---------------------------------------------------------
 
-TrackManager::TrackManager() 
+TrackManager::TrackManager()
 {
   last_id_ = 0;
   current_num_tracks_ = 0;
@@ -135,13 +105,27 @@ TrackManager::~TrackManager() {}
 void TrackManager::add_new_track(const Measurement& meas)
 {
   Track track(meas, ++last_id_);
+  Attributes attributes = meas.get_attributes();
   track_list_.insert({track.get_id(), track});
+  attributes_list_.insert({track.get_id(), attributes});
   ++current_num_tracks_;
+}
+
+void TrackManager::delete_track(uint id)
+{
+  track_list_.erase(id);
+  attributes_list_.erase(id);
+  --current_num_tracks_;
 }
 
 const std::map<uint, Track>& TrackManager::get_track_list() const
 {
   return track_list_;
+}
+
+const std::map<uint, Attributes>& TrackManager::get_attributes() const
+{
+  return attributes_list_;
 }
 
 void TrackManager::manage_tracks(
@@ -176,7 +160,7 @@ void TrackManager::manage_tracks(
 
   for (uint id : track_id_to_delete)
   {
-    track_list_.erase(id);
+    delete_track(id);
   }
 
   for (uint index : unassigned_meas_indexes)
@@ -185,11 +169,32 @@ void TrackManager::manage_tracks(
   }
 }
 
+void TrackManager::update_location(uint id)
+{
+  Eigen::VectorXd location = track_list_.at(id).get_x();
+  attributes_list_.at(id).loc_x = location(0);
+  attributes_list_.at(id).loc_y = location(1);
+  attributes_list_.at(id).loc_z = location(2);
+}
+
+void TrackManager::update_attributes(uint id, const Measurement& meas)
+{
+  Attributes meas_attributes = meas.get_attributes();
+  attributes_list_.at(id).height =
+    0.9 * attributes_list_.at(id).height + 0.1 * meas_attributes.height;
+  attributes_list_.at(id).width =
+    0.9 * attributes_list_.at(id).width + 0.1 * meas_attributes.width;
+  attributes_list_.at(id).length =
+    0.9 * attributes_list_.at(id).length + 0.1 * meas_attributes.length;
+  attributes_list_.at(id).rot_y = meas_attributes.rot_y;
+}
+
 void TrackManager::predict_tracks(uint frame_count, EKF& ekf)
 {
-  for(auto& track_pair : track_list_)
+  for (auto& track_pair : track_list_)
   {
     ekf.predict(frame_count, track_pair.second);
+    update_location(track_pair.first);
   }
 }
 
@@ -212,11 +217,13 @@ void TrackManager::update_track(uint id, const Measurement& meas, EKF& ekf)
   {
     track_list_.at(id).set_state(1);
   }
+  update_location(id);
+  update_attributes(id, meas);
 }
 
 void TrackManager::print()
 {
-  for(const auto& track_pair : track_list_)
+  for (const auto& track_pair : track_list_)
   {
     track_pair.second.print();
   }
