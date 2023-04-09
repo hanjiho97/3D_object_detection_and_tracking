@@ -18,9 +18,9 @@ public:
     const Attributes& attributes,
     const Eigen::Matrix<double, 3, 4>& P2);
   std::vector<cv::Point> get_topview_conrers(
-  uint16_t background_half_width,
-  uint16_t background_height,
-  uint8_t background_box_scale);
+    uint16_t background_half_width,
+    uint16_t background_height,
+    uint8_t background_box_scale);
 
 private:
   Eigen::Matrix<double, 3, 14> corners1_3D_;

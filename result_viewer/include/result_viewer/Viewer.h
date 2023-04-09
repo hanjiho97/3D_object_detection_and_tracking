@@ -2,18 +2,18 @@
 #define VIEWER_H
 
 #include <cstdint>
+#include <iostream>
 #include <map>
 #include <random>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <iostream>
 
 #include <spdlog/spdlog.h>
 #include "opencv2/opencv.hpp"
 
-#include "result_viewer/Type.h"
 #include "result_viewer/Projection.h"
+#include "result_viewer/Type.h"
 
 class Viewer
 {
@@ -34,7 +34,7 @@ public:
   void draw_topview_car(const std::vector<cv::Point>& topview_bbox_points);
   void draw(
     bool show_bbox_3D,
-    bool showing_head, 
+    bool showing_head,
     bool showing_id,
     bool showing_topview_box,
     bool showing_topview_id,
@@ -43,10 +43,11 @@ public:
 
   void read_P2_matrix(const Eigen::Matrix<double, 3, 4>& P2);
   void add_image(const cv::Mat& image);
-  void add_attributes_list(const std::map<uint32_t, Attributes>& attributes_list);
+  void add_attributes_list(
+    const std::map<uint32_t, Attributes>& attributes_list);
   void show_result(
     bool show_bbox_3D,
-    bool showing_head, 
+    bool showing_head,
     bool showing_id,
     bool showing_topview_box,
     bool showing_topview_id,

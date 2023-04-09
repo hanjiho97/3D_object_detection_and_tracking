@@ -13,7 +13,7 @@ int main(void)
   bool showing_topview_id = true;
   bool showing_topview_position = true;
   bool showing_topview_car = true;
-  for (int frame_count=0; frame_count<447; ++frame_count)
+  for (int frame_count = 0; frame_count < 447; ++frame_count)
   {
     kitti::Data test_data;
     test_data = dataloader.get_kitti_data(frame_count);
@@ -21,7 +21,7 @@ int main(void)
     std::map<uint, Attributes> attributes_list;
     if (test_data.labels.size() > 0)
     {
-      for (int index=0; index < test_data.labels.size(); ++index)
+      for (int index = 0; index < test_data.labels.size(); ++index)
       {
         attributes.loc_x = test_data.labels[index].loc_x;
         attributes.loc_y = test_data.labels[index].loc_y;
@@ -32,17 +32,17 @@ int main(void)
         attributes.rot_y = test_data.labels[index].rot_y;
         attributes_list.insert({index, attributes});
       }
-    viewer.read_P2_matrix(test_data.calibration.P2);
-    viewer.add_image(test_data.image);
-    viewer.add_attributes_list(attributes_list);
-    viewer.show_result(
-      show_bbox_3D, 
-      showing_head, 
-      showing_id,
-      showing_topview_box,
-      showing_topview_id,
-      showing_topview_position,
-      showing_topview_car);
+      viewer.read_P2_matrix(test_data.calibration.P2);
+      viewer.add_image(test_data.image);
+      viewer.add_attributes_list(attributes_list);
+      viewer.show_result(
+        show_bbox_3D,
+        showing_head,
+        showing_id,
+        showing_topview_box,
+        showing_topview_id,
+        showing_topview_position,
+        showing_topview_car);
     }
   }
   return 0;
