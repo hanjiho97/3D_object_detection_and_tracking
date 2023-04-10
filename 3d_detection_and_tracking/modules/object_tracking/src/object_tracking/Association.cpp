@@ -100,7 +100,6 @@ void Association::associate_and_update(
     std::tie(ret, track_id, meas_index) = get_closest_pair();
     if (ret == -1)
     {
-      std::cout << "no more associations" << std::endl;
       break;
     }
 
