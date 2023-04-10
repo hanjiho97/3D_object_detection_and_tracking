@@ -1,6 +1,7 @@
 #ifndef TYPE_H_
 #define TYPE_H_
 
+#include <cstdint>
 #include <vector>
 
 #include "Eigen/Dense"
@@ -43,15 +44,5 @@ struct Attributes
   double height, width, length;
   double rot_y;
 };
-
-namespace background
-{
-constexpr int16_t HEIGHT = 600;
-constexpr int16_t WIDTH = 600;
-constexpr int16_t HALF_WIDTH = 300;
-constexpr int16_t BOX_SCALE = 15;
-}
-
-constexpr int8_t COLOR_MAP_SIZE = 100;
 
 #endif  // TYPE_H_

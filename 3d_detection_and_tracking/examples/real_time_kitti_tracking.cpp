@@ -57,10 +57,15 @@ int main()
   EKF ekf = EKF();
   Viewer viewer = Viewer();
   std::vector<Measurement> meas_list;
-  bool show_bbox_3D=true;
-  bool showing_head=true;
-  bool showing_id=true;
-  bool showing_topview=true;
+
+  //Viewer variables
+  bool show_bbox_3D = true;
+  bool showing_head = true;
+  bool showing_id = true;
+  bool showing_topview_box = true;
+  bool showing_topview_id = true;
+  bool showing_topview_position = true;
+  bool showing_topview_car = true;
 
   int frame_count = -1;
   bool filter_update = true;
@@ -102,25 +107,19 @@ int main()
     }
 
     std::map<uint, Attributes> attributes_list = track_manager.get_attributes();
-    for(auto& attr_pair : attributes_list)
-    {
-      std::cout << "attr key : " << attr_pair.first << std::endl; 
-    }
-    
-    //std::map<uint, Track> track_list = track_manager.get_track_list();
-    // for (auto& track_pair : track_list)
-    // {
-    //   if (track_pair.second.get_state() == 2)
-    //   {
-    //     viewer.add_3d_bbox(track_pair.first, track_pair.second.get_attributes());
-    //     viewer.draw(
-    //     show_bbox_3D, 
-    //     showing_head, 
-    //     showing_id,
-    //     showing_topview);
-    //   }
-    // }
-    //viewer.show_result();
+
+    //View the result
+    viewer.read_P2_matrix(kitti_data.calibration.P2);
+    viewer.add_image(kitti_data.image);
+    viewer.add_attributes_list(attributes_list);
+    viewer.show_result(
+        show_bbox_3D,
+        showing_head,
+        showing_id,
+        showing_topview_box,
+        showing_topview_id,
+        showing_topview_position,
+        showing_topview_car);
   }
   return 0;
 }

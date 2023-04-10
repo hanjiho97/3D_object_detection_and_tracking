@@ -1,6 +1,6 @@
 #include "result_viewer/Projection.h"
 
-Projection::Projection() 
+Projection::Projection()
 {
   Eigen::Matrix<double, 3, 14> corners1_3D_ =
     Eigen::Matrix<double, 3, 14>::Ones();
@@ -72,8 +72,7 @@ bool Projection::project_3D_to_2D(
   const Eigen::Matrix<double, 3, 4>& P2,
   Eigen::Matrix<double, 3, 14>& corners_2D)
 {
-  Eigen::Matrix<double, 4, 14> corners =
-    Eigen::Matrix<double, 4, 14>::Ones();
+  Eigen::Matrix<double, 4, 14> corners = Eigen::Matrix<double, 4, 14>::Ones();
   corners.block(0, 0, 3, 14) << corners_3D;
   corners_2D = P2 * corners;
   return 0;
@@ -98,61 +97,52 @@ std::vector<cv::Point> Projection::get_2D_corners(
     {
       continue;
     }
-    point.x =
-      static_cast<int32_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
-    point.y =
-      static_cast<int32_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
+    point.x = static_cast<int32_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
+    point.y = static_cast<int32_t>(corners1_2D_(1, col) / corners1_2D_(2, col));
     points.push_back(point);
-    point.x =
-      static_cast<int32_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
-    point.y =
-      static_cast<int32_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
+
+    point.x = static_cast<int32_t>(corners2_2D_(0, col) / corners2_2D_(2, col));
+    point.y = static_cast<int32_t>(corners2_2D_(1, col) / corners2_2D_(2, col));
     points.push_back(point);
   }
   return points;
 }
 
-std::vector<cv::Point> Projection::get_topview_conrers()
+std::vector<cv::Point> Projection::get_topview_conrers(
+  uint16_t background_half_width,
+  uint16_t background_height,
+  uint8_t background_box_scale)
 {
   std::vector<cv::Point> points;
   cv::Point point;
-  point.x = 
-    background::HALF_WIDTH + 
-    static_cast<int16_t>(corners2_3D_(0, 2) * background::BOX_SCALE);
-  point.y = 
-    background::HEIGHT - 
-    static_cast<int16_t>(corners2_3D_(2, 2) * background::BOX_SCALE);
+  point.x = background_half_width +
+            static_cast<int16_t>(corners2_3D_(0, 2) * background_box_scale);
+  point.y = background_height -
+            static_cast<int16_t>(corners2_3D_(2, 2) * background_box_scale);
   points.push_back(point);
 
-  point.x = 
-    background::HALF_WIDTH + 
-    static_cast<int16_t>(corners2_3D_(0, 3) * background::BOX_SCALE);
-  point.y = 
-    background::HEIGHT - 
-    static_cast<int16_t>(corners2_3D_(2, 3) * background::BOX_SCALE);
+  point.x = background_half_width +
+            static_cast<int16_t>(corners2_3D_(0, 3) * background_box_scale);
+  point.y = background_height -
+            static_cast<int16_t>(corners2_3D_(2, 3) * background_box_scale);
   points.push_back(point);
 
-  point.x = 
-    background::HALF_WIDTH + 
-    static_cast<int16_t>(corners2_3D_(0, 4) * background::BOX_SCALE);
-  point.y = 
-    background::HEIGHT - 
-    static_cast<int16_t>(corners2_3D_(2, 4) * background::BOX_SCALE);
+  point.x = background_half_width +
+            static_cast<int16_t>(corners2_3D_(0, 4) * background_box_scale);
+  point.y = background_height -
+            static_cast<int16_t>(corners2_3D_(2, 4) * background_box_scale);
   points.push_back(point);
 
-  point.x = 
-    background::HALF_WIDTH + 
-    static_cast<int16_t>(corners2_3D_(0, 11) * background::BOX_SCALE);
-  point.y = background::HEIGHT - 
-    static_cast<int16_t>(corners2_3D_(2, 11) * background::BOX_SCALE);
+  point.x = background_half_width +
+            static_cast<int16_t>(corners2_3D_(0, 11) * background_box_scale);
+  point.y = background_height -
+            static_cast<int16_t>(corners2_3D_(2, 11) * background_box_scale);
   points.push_back(point);
 
-  point.x = 
-    background::HALF_WIDTH + 
-    static_cast<int16_t>(corners2_3D_(0, 2) * background::BOX_SCALE);
-  point.y = 
-    background::HEIGHT - 
-    static_cast<int16_t>(corners2_3D_(2, 2) * background::BOX_SCALE);
+  point.x = background_half_width +
+            static_cast<int16_t>(corners2_3D_(0, 2) * background_box_scale);
+  point.y = background_height -
+            static_cast<int16_t>(corners2_3D_(2, 2) * background_box_scale);
   points.push_back(point);
   return points;
 }

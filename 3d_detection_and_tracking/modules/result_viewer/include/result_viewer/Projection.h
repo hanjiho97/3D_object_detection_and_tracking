@@ -2,6 +2,7 @@
 #define PROJECTION_H
 
 #include <cmath>
+#include <cstdint>
 #include <vector>
 #include "Eigen/Dense"
 #include "opencv2/opencv.hpp"
@@ -16,7 +17,10 @@ public:
   std::vector<cv::Point> get_2D_corners(
     const Attributes& attributes,
     const Eigen::Matrix<double, 3, 4>& P2);
-  std::vector<cv::Point> get_topview_conrers();
+  std::vector<cv::Point> get_topview_conrers(
+    uint16_t background_half_width,
+    uint16_t background_height,
+    uint8_t background_box_scale);
 
 private:
   Eigen::Matrix<double, 3, 14> corners1_3D_;

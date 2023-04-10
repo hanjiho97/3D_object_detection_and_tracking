@@ -1,6 +1,3 @@
-#include <iostream>
-#include <vector>
-
 #include "3d_detection_and_tracking/Type.h"
 #include "object_tracking/Association.h"
 #include "object_tracking/Dataloader.h"
@@ -17,48 +14,51 @@ int main()
   Association association = Association();
   EKF ekf = EKF();
   Viewer viewer = Viewer();
-  std::vector<Measurement> meas_list;
-  bool show_bbox_3D=true;
-  bool showing_head=true;
-  bool showing_id=true;
-  bool showing_topview=true;
+  std::vector<Measurement> measurement_list;
 
-  for(uint frame_count = 0; frame_count <= 470; ++frame_count)
+  //Viewer variables
+  bool show_bbox_3D = true;
+  bool showing_head = true;
+  bool showing_id = true;
+  bool showing_topview_box = true;
+  bool showing_topview_id = true;
+  bool showing_topview_position = true;
+  bool showing_topview_car = true;
+
+  const uint16_t TOTAL_FRAME_COUNT = 447;
+
+  for(uint frame_count = 0; frame_count < TOTAL_FRAME_COUNT; ++frame_count)
   {
+    //Load kitti data using dataloader
     kitti::Data kitti_data;
     kitti_data = data_loader.get_kitti_data(frame_count);
-    viewer.read_P2_matrix(kitti_data.calibration.P2);
-    viewer.add_image(kitti_data.image);
-    meas_list.clear();
-    meas_list.reserve(kitti_data.labels.size());
+
+    //Initialize measurement list
+    measurement_list.clear();
+    measurement_list.reserve(kitti_data.labels.size());
     for(uint label_num = 0; label_num < kitti_data.labels.size(); ++label_num)
     {
-      Measurement meas = Measurement(frame_count, label_num, kitti_data);
-      meas_list.push_back(meas);
+      Measurement measurement = Measurement(frame_count, label_num, kitti_data);
+      measurement_list.push_back(measurement);
     }
 
+    //Track objects
     track_manager.predict_tracks(frame_count, ekf);
-    association.associate_and_update(track_manager, meas_list, ekf);
+    association.associate_and_update(track_manager, measurement_list, ekf);
     std::map<uint, Attributes> attributes_list = track_manager.get_attributes();
-    for(auto& attr_pair : attributes_list)
-    {
-      std::cout << "attr key : " << attr_pair.first << std::endl; 
-      std::cout << "attr val : " << attr_pair.second.height << std::endl;
-    }
-    // std::map<uint, Track> track_list = track_manager.get_track_list();
-    // for(auto& track_pair : track_list)
-    // {
-    //   if (track_pair.second.get_state() == 2)
-    //   {
-    //     viewer.add_3d_bbox(track_pair.first, track_pair.second.get_attributes());
-    //     viewer.draw(
-    //     show_bbox_3D, 
-    //     showing_head, 
-    //     showing_id,
-    //     showing_topview);
-    //   }
-    // }
-    //viewer.show_result();
+
+    //View the result
+    viewer.read_P2_matrix(kitti_data.calibration.P2);
+    viewer.add_image(kitti_data.image);
+    viewer.add_attributes_list(attributes_list);
+    viewer.show_result(
+        show_bbox_3D,
+        showing_head,
+        showing_id,
+        showing_topview_box,
+        showing_topview_id,
+        showing_topview_position,
+        showing_topview_car);
   }
   return 0;
 }
