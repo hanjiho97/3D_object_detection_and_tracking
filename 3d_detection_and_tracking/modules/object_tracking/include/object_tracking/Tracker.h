@@ -22,6 +22,7 @@ public:
   virtual ~Track();
 
   const Eigen::VectorXd& get_x() const;
+  Eigen::VectorXd get_location() const;
   const Eigen::MatrixXd& get_P() const;
   double get_t() const;
   uint get_id() const;

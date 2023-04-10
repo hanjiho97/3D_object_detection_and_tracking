@@ -60,6 +60,12 @@ uint Track::get_state() const
   return state_;
 }
 
+Eigen::VectorXd Track::get_location() const
+{
+  Eigen::VectorXd location = veh_to_cam_.block<3, 3>(0, 0)*x_.block<3, 1>(0, 0) + veh_to_cam_.block<3, 1>(0, 3);
+  return location;
+}
+
 void Track::set_score(double score)
 {
   score_ = score;
@@ -171,7 +177,7 @@ void TrackManager::manage_tracks(
 
 void TrackManager::update_location(uint id)
 {
-  Eigen::VectorXd location = track_list_.at(id).get_x();
+  Eigen::VectorXd location = track_list_.at(id).get_location();
   attributes_list_.at(id).loc_x = location(0);
   attributes_list_.at(id).loc_y = location(1);
   attributes_list_.at(id).loc_z = location(2);
@@ -187,6 +193,7 @@ void TrackManager::update_attributes(uint id, const Measurement& meas)
   attributes_list_.at(id).length =
     0.9 * attributes_list_.at(id).length + 0.1 * meas_attributes.length;
   attributes_list_.at(id).rot_y = meas_attributes.rot_y;
+  attributes_list_.at(id).state = track_list_.at(id).get_state();
 }
 
 void TrackManager::predict_tracks(uint frame_count, EKF& ekf)

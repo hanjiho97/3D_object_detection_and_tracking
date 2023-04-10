@@ -40,6 +40,7 @@ struct Data
 
 struct Attributes
 {
+  uint state;
   double loc_x, loc_y, loc_z;
   double height, width, length;
   double rot_y;
