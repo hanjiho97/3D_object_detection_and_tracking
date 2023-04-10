@@ -34,13 +34,7 @@ int main()
     kitti_data = data_loader.get_kitti_data(frame_count);
 
     //Initialize measurement list
-    measurement_list.clear();
-    measurement_list.reserve(kitti_data.labels.size());
-    for(uint label_num = 0; label_num < kitti_data.labels.size(); ++label_num)
-    {
-      Measurement measurement = Measurement(frame_count, label_num, kitti_data);
-      measurement_list.push_back(measurement);
-    }
+    Measurement::kitti_to_measurement_list(frame_count, kitti_data, measurement_list);
 
     //Track objects
     track_manager.predict_tracks(frame_count, ekf);

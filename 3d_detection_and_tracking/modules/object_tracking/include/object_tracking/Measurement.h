@@ -31,7 +31,7 @@ public:
   Eigen::MatrixXd get_veh_to_cam() const;
   double get_t() const;
   Attributes get_attributes() const;
-
+  static void kitti_to_measurement_list(uint frame_count, const kitti::Data& kitti_data, std::vector<Measurement>& meas_list);
   void print() const;
 
 private:
@@ -48,5 +48,7 @@ private:
   double height_;
   double rot_y_;
 };
+
+
 
 #endif  // MEASUREMENT_H_
