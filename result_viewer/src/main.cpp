@@ -13,7 +13,8 @@ int main(void)
   bool showing_topview_id = true;
   bool showing_topview_position = true;
   bool showing_topview_car = true;
-  for (int frame_count = 0; frame_count < 447; ++frame_count)
+  const uint16_t TOTAL_FRAME_COUNT = 447;
+  for (int frame_count = 0; frame_count < TOTAL_FRAME_COUNT; ++frame_count)
   {
     kitti::Data test_data;
     test_data = dataloader.get_kitti_data(frame_count);

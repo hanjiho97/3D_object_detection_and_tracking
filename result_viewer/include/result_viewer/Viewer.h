@@ -2,14 +2,13 @@
 #define VIEWER_H
 
 #include <cstdint>
-#include <iostream>
 #include <map>
 #include <random>
 #include <sstream>
 #include <string>
 #include <vector>
 
-#include <spdlog/spdlog.h>
+#include "spdlog/spdlog.h"
 #include "opencv2/opencv.hpp"
 
 #include "result_viewer/Projection.h"
