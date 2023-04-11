@@ -274,10 +274,6 @@ void Viewer::draw(
   {
     id_ = attributes_pair.first;
     attributes_ = attributes_pair.second;
-    if(attributes_.state != 2)
-    {
-      continue;
-    }
     bbox_points = projection_.get_2D_corners(attributes_, P2_);
     top_view_bbox_points = projection_.get_topview_conrers(
       BACKGROUND_HALF_WIDTH, BACKGROUND_HEIGHT, BACKGROUND_BOX_SCALE);
@@ -351,5 +347,5 @@ void Viewer::show_result(
     cv::imshow("top_view", top_view_);
   }
   cv::imshow("result_image", image_);
-  cv::waitKey(75);
+  cv::waitKey(0);
 }
