@@ -93,9 +93,15 @@ std::vector<cv::Point> Projection::get_2D_corners(
   project_3D_to_2D(corners2_3D_, P2, corners2_2D_);
   for (uint8_t col = 0; col < 14; ++col)
   {
-    if (corners1_2D_(2, col) < 0 || corners2_2D_(2, col) < 0)
+    corners1_2D_(2, col) = std::abs(corners1_2D_(2, col));
+    corners2_2D_(2, col) = std::abs(corners2_2D_(2, col));
+    if (corners1_2D_(2, col) < 0.00001)
     {
-      continue;
+      corners1_2D_(2, col) = 0.00001;
+    }
+    if (corners2_2D_(2, col) < 0.00001)
+    {
+      corners2_2D_(2, col) = 0.00001;
     }
     point.x = static_cast<int32_t>(corners1_2D_(0, col) / corners1_2D_(2, col));
     point.y = static_cast<int32_t>(corners1_2D_(1, col) / corners1_2D_(2, col));

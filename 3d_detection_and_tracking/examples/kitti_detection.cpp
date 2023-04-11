@@ -18,7 +18,6 @@ int main(void)
 
   const uint16_t TOTAL_FRAME_COUNT = 447;
 
-
   for (int frame_count = 0; frame_count < TOTAL_FRAME_COUNT; ++frame_count)
   {
     if(frame_count == 177)

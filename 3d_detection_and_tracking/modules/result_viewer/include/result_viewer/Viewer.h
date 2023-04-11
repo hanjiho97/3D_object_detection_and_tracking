@@ -2,7 +2,6 @@
 #define VIEWER_H
 
 #include <cstdint>
-#include <iostream>
 #include <map>
 #include <random>
 #include <sstream>
