@@ -1,10 +1,9 @@
 # 3D_object_detection_and_tracking
 
 ## Introduction
----
-
+  
 ## Getting Started
----
+  
 ### Dependency
 Our released implementation is tested on.  
   
