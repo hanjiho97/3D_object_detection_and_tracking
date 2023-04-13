@@ -19,3 +19,8 @@ Boost 1.65.1
 spdlog 1.11.0  
 NVIDIA CUDA 11.1  
 RTX 3070 GPUs  
+
+## Result
+- Object detection vs Object tracking
+
+<img src="https://user-images.githubusercontent.com/62413303/231679731-6cf2ea66-c051-4fe5-acd7-6c4ac18f1448.gif" width="75%" height="75%"/>
