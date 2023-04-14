@@ -13,7 +13,7 @@ EKF::EKF()
 EKF::~EKF() {}
 
 
-void EKF::predict(uint frame_count, Track& track)
+void EKF::predict(uint16_t frame_count, Track& track)
 {
   double cur_t = 0.1 * static_cast<double>(frame_count);
   double delta_t = cur_t - track.get_t();
