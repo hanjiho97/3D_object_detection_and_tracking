@@ -8,8 +8,8 @@
 #include <string>
 #include <vector>
 
-#include "spdlog/spdlog.h"
 #include "opencv2/opencv.hpp"
+#include "spdlog/spdlog.h"
 
 #include "3d_detection_and_tracking/Type.h"
 #include "result_viewer/Projection.h"
