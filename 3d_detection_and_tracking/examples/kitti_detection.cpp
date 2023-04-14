@@ -7,7 +7,7 @@ int main(void)
   Dataloader dataloader = Dataloader();
   Viewer viewer = Viewer();
 
-  //Viewer variables
+  // Viewer variables
   bool show_bbox_3D = true;
   bool showing_head = true;
   bool showing_id = true;
@@ -20,14 +20,14 @@ int main(void)
 
   for (int frame_count = 0; frame_count < TOTAL_FRAME_COUNT; ++frame_count)
   {
-    if(frame_count == 177)
+    if (frame_count == 177)
     {
       frame_count += 4;
     }
     kitti::Data test_data;
     test_data = dataloader.get_kitti_data(frame_count);
 
-    //Make attributes_list
+    // Make attributes_list
     Attributes attributes;
     std::map<uint, Attributes> attributes_list;
     if (test_data.labels.size() > 0)

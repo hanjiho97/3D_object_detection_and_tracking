@@ -58,7 +58,7 @@ int main()
   Viewer viewer = Viewer();
   std::vector<Measurement> meas_list;
 
-  //Viewer variables
+  // Viewer variables
   bool show_bbox_3D = true;
   bool showing_head = true;
   bool showing_id = true;
@@ -108,18 +108,18 @@ int main()
 
     std::map<uint, Attributes> attributes_list = track_manager.get_attributes();
 
-    //View the result
+    // View the result
     viewer.read_P2_matrix(kitti_data.calibration.P2);
     viewer.add_image(kitti_data.image);
     viewer.add_attributes_list(attributes_list);
     viewer.show_result(
-        show_bbox_3D,
-        showing_head,
-        showing_id,
-        showing_topview_box,
-        showing_topview_id,
-        showing_topview_position,
-        showing_topview_car);
+      show_bbox_3D,
+      showing_head,
+      showing_id,
+      showing_topview_box,
+      showing_topview_id,
+      showing_topview_position,
+      showing_topview_car);
   }
   return 0;
 }

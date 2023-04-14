@@ -62,7 +62,9 @@ uint8_t Track::get_state() const
 
 Eigen::VectorXd Track::get_location() const
 {
-  Eigen::VectorXd location = veh_to_cam_.block<3, 3>(0, 0)*x_.block<3, 1>(0, 0) + veh_to_cam_.block<3, 1>(0, 3);
+  Eigen::VectorXd location =
+    veh_to_cam_.block<3, 3>(0, 0) * x_.block<3, 1>(0, 0) +
+    veh_to_cam_.block<3, 1>(0, 3);
   return location;
 }
 

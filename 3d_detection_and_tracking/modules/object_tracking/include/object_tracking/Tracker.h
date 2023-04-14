@@ -48,7 +48,6 @@ private:
 
   double score_;
   uint8_t state_;  // 0 : init, 1 : tentative, 2 : confirmed
-
 };
 
 class TrackManager
@@ -69,8 +68,8 @@ public:
   void update_track(uint32_t id, const Measurement& meas, EKF& ekf);
 
   void print();
-private:
 
+private:
   void update_location(uint32_t id);
   void update_attributes(uint32_t id, const Measurement& meas);
 

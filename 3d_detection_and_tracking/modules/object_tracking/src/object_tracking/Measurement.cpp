@@ -85,15 +85,18 @@ Eigen::MatrixXd Measurement::get_veh_to_cam() const
   return veh_to_cam_;
 }
 
-void Measurement::kitti_to_measurement_list(uint frame_count, const kitti::Data& kitti_data, std::vector<Measurement>& meas_list)
+void Measurement::kitti_to_measurement_list(
+  uint frame_count,
+  const kitti::Data &kitti_data,
+  std::vector<Measurement> &meas_list)
 {
   meas_list.clear();
   meas_list.reserve(kitti_data.labels.size());
-  for(uint label_num = 0; label_num < kitti_data.labels.size(); ++label_num)
-    {
-      Measurement measurement = Measurement(frame_count, label_num, kitti_data);
-      meas_list.push_back(measurement);
-    }
+  for (uint label_num = 0; label_num < kitti_data.labels.size(); ++label_num)
+  {
+    Measurement measurement = Measurement(frame_count, label_num, kitti_data);
+    meas_list.push_back(measurement);
+  }
 }
 
 void Measurement::print() const
