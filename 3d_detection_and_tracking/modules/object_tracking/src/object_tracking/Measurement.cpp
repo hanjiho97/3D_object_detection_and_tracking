@@ -1,31 +1,8 @@
 #include "object_tracking/Measurement.h"
 
-Measurement::Measurement()
-{
-  R_ = Eigen::MatrixXd::Zero(3, 3);
-  double sigma_lidar_x = 0.1;
-  double sigma_lidar_y = 0.1;
-  double sigma_lidar_z = 0.1;
-  R_(0, 0) = sigma_lidar_x * sigma_lidar_x;
-  R_(1, 1) = sigma_lidar_y * sigma_lidar_y;
-  R_(2, 2) = sigma_lidar_z * sigma_lidar_z;
-
-  cam_to_veh_ = Eigen::MatrixXd::Identity(4, 4);
-  veh_to_cam_ = cam_to_veh_.inverse();
-
-  t_ = 1.0;
-  z_ = Eigen::VectorXd(3);
-  z_ << 1.0, 2.0, 3.0;
-  type_ = "Car";
-  width_ = 2.0;
-  height_ = 2.0;
-  length_ = 2.0;
-  rot_y_ = 0.0;
-}
-
 Measurement::Measurement(
-  uint frame_count,
-  uint detection_count,
+  uint16_t frame_count,
+  uint16_t detection_count,
   const kitti::Data &kitti_data)
 {
   R_ = Eigen::MatrixXd::Zero(3, 3);

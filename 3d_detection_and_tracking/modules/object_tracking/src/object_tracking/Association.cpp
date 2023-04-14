@@ -14,9 +14,9 @@ void Association::associate(
   const std::vector<Measurement>& meas_list,
   const EKF& ekf)
 {
-  const std::map<uint, Track>& track_list = track_manager.get_track_list();
-  uint N = track_list.size();
-  uint M = meas_list.size();
+  const std::map<uint32_t, Track>& track_list = track_manager.get_track_list();
+  uint32_t N = track_list.size();
+  uint32_t M = meas_list.size();
   unassigned_track_ids.clear();
   unassigned_meas_indexes.clear();
   unassigned_track_ids.reserve(N);
@@ -25,15 +25,15 @@ void Association::associate(
   association_matrix =
     Eigen::MatrixXd::Constant(N, M, std::numeric_limits<double>::max());
 
-  for (uint i = 0; i < M; ++i)
+  for (uint32_t i = 0; i < M; ++i)
   {
     unassigned_meas_indexes.push_back(i);
   }
 
-  uint row(0), col(0);
+  uint32_t row(0), col(0);
   for (const auto& track_pair : track_list)
   {
-    col = 0;
+    col = 0U;
     unassigned_track_ids.push_back(track_pair.first);
     for (const auto& meas : meas_list)
     {
@@ -59,9 +59,9 @@ Association::MHD(const Track& track, const Measurement& meas, const EKF& ekf)
   return (y.transpose() * S.inverse() * y)(0, 0);
 }
 
-std::tuple<int, uint, uint> Association::get_closest_pair()
+std::tuple<int32_t, uint32_t, uint32_t> Association::get_closest_pair()
 {
-  uint i, track_id, j, meas_index;
+  uint32_t i, track_id, j, meas_index;
   double min_val = association_matrix.minCoeff(&i, &j);
   if (std::abs(std::numeric_limits<double>::max() - min_val) < 1.0)
   {
@@ -95,12 +95,12 @@ void Association::associate_and_update(
   associate(track_manager, meas_list, ekf);
   while (association_matrix.rows() > 0 && association_matrix.cols() > 0)
   {
-    int ret;
-    uint track_id, meas_index;
+    int32_t ret;
+    uint32_t track_id, meas_index;
     std::tie(ret, track_id, meas_index) = get_closest_pair();
     if (ret == -1)
     {
-      std::cout << "no more associations" << std::endl;
+      spdlog::debug("no more associations");
       break;
     }
 

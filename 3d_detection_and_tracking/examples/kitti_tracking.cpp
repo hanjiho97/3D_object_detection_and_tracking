@@ -27,7 +27,7 @@ int main()
 
   const uint16_t TOTAL_FRAME_COUNT = 447;
 
-  for(uint frame_count = 0; frame_count < TOTAL_FRAME_COUNT; ++frame_count)
+  for(uint16_t frame_count = 0; frame_count < TOTAL_FRAME_COUNT; ++frame_count)
   {
     //Load kitti data using dataloader
     kitti::Data kitti_data;

@@ -1,6 +1,6 @@
 #include "object_tracking/Tracker.h"
 
-Track::Track(const Measurement& meas, uint id)
+Track::Track(const Measurement& meas, uint32_t id)
 {
   id_ = id;
 
@@ -46,7 +46,7 @@ double Track::get_t() const
   return t_;
 }
 
-uint Track::get_id() const
+uint32_t Track::get_id() const
 {
   return id_;
 }
@@ -55,7 +55,7 @@ double Track::get_score() const
 {
   return score_;
 }
-uint Track::get_state() const
+uint8_t Track::get_state() const
 {
   return state_;
 }
@@ -70,7 +70,7 @@ void Track::set_score(double score)
 {
   score_ = score;
 }
-void Track::set_state(uint state)
+void Track::set_state(uint8_t state)
 {
   state_ = state;
 }
@@ -117,29 +117,29 @@ void TrackManager::add_new_track(const Measurement& meas)
   ++current_num_tracks_;
 }
 
-void TrackManager::delete_track(uint id)
+void TrackManager::delete_track(uint32_t id)
 {
   track_list_.erase(id);
   attributes_list_.erase(id);
   --current_num_tracks_;
 }
 
-const std::map<uint, Track>& TrackManager::get_track_list() const
+const std::map<uint32_t, Track>& TrackManager::get_track_list() const
 {
   return track_list_;
 }
 
-const std::map<uint, Attributes>& TrackManager::get_attributes() const
+const std::map<uint32_t, Attributes>& TrackManager::get_attributes() const
 {
   return attributes_list_;
 }
 
 void TrackManager::manage_tracks(
-  std::vector<uint> unassigned_track_ids,
-  std::vector<uint> unassigned_meas_indexes,
+  std::vector<uint32_t> unassigned_track_ids,
+  std::vector<uint32_t> unassigned_meas_indexes,
   const std::vector<Measurement>& meas_list)
 {
-  for (uint id : unassigned_track_ids)
+  for (auto id : unassigned_track_ids)
   {
     if (track_list_.find(id) == track_list_.end())
     {
@@ -149,11 +149,11 @@ void TrackManager::manage_tracks(
     track_list_.at(id).set_score(current_score - 1.0 / 6.0);
   }
 
-  std::vector<uint> track_id_to_delete;
+  std::vector<uint32_t> track_id_to_delete;
 
   for (auto iter = track_list_.begin(); iter != track_list_.end(); ++iter)
   {
-    uint state = iter->second.get_state();
+    uint8_t state = iter->second.get_state();
     double score = iter->second.get_score();
     Eigen::MatrixXd P = iter->second.get_P();
     if (
@@ -164,18 +164,18 @@ void TrackManager::manage_tracks(
     }
   }
 
-  for (uint id : track_id_to_delete)
+  for (auto id : track_id_to_delete)
   {
     delete_track(id);
   }
 
-  for (uint index : unassigned_meas_indexes)
+  for (auto index : unassigned_meas_indexes)
   {
     add_new_track(meas_list[index]);
   }
 }
 
-void TrackManager::update_location(uint id)
+void TrackManager::update_location(uint32_t id)
 {
   Eigen::VectorXd location = track_list_.at(id).get_location();
   attributes_list_.at(id).loc_x = location(0);
@@ -183,7 +183,7 @@ void TrackManager::update_location(uint id)
   attributes_list_.at(id).loc_z = location(2);
 }
 
-void TrackManager::update_attributes(uint id, const Measurement& meas)
+void TrackManager::update_attributes(uint32_t id, const Measurement& meas)
 {
   Attributes meas_attributes = meas.get_attributes();
   attributes_list_.at(id).height =
@@ -196,7 +196,7 @@ void TrackManager::update_attributes(uint id, const Measurement& meas)
   attributes_list_.at(id).state = track_list_.at(id).get_state();
 }
 
-void TrackManager::predict_tracks(uint frame_count, EKF& ekf)
+void TrackManager::predict_tracks(uint16_t frame_count, EKF& ekf)
 {
   for (auto& track_pair : track_list_)
   {
@@ -205,7 +205,7 @@ void TrackManager::predict_tracks(uint frame_count, EKF& ekf)
   }
 }
 
-void TrackManager::update_track(uint id, const Measurement& meas, EKF& ekf)
+void TrackManager::update_track(uint32_t id, const Measurement& meas, EKF& ekf)
 {
   ekf.update(track_list_.at(id), meas);
   if (track_list_.find(id) == track_list_.end())

@@ -26,9 +26,9 @@ bool Dataloader::load_kitti_calibration(
 
   std::getline(ifs, line);
   std::stringstream ss(line.substr(4));
-  for (int row = 0; row < 3; ++row)
+  for (uint8_t row = 0; row < 3; ++row)
   {
-    for (int col = 0; col < 4; ++col)
+    for (uint8_t col = 0; col < 4; ++col)
     {
       ss >> value;
       calibration_data.P0(row, col) = value;
@@ -38,9 +38,9 @@ bool Dataloader::load_kitti_calibration(
   std::getline(ifs, line);
   ss.clear();
   ss.str(line.substr(4));
-  for (int row = 0; row < 3; ++row)
+  for (uint8_t row = 0; row < 3; ++row)
   {
-    for (int col = 0; col < 4; ++col)
+    for (uint8_t col = 0; col < 4; ++col)
     {
       ss >> value;
       calibration_data.P1(row, col) = value;
@@ -50,9 +50,9 @@ bool Dataloader::load_kitti_calibration(
   std::getline(ifs, line);
   ss.clear();
   ss.str(line.substr(4));
-  for (int row = 0; row < 3; ++row)
+  for (uint8_t row = 0; row < 3; ++row)
   {
-    for (int col = 0; col < 4; ++col)
+    for (uint8_t col = 0; col < 4; ++col)
     {
       ss >> value;
       calibration_data.P2(row, col) = value;
@@ -62,9 +62,9 @@ bool Dataloader::load_kitti_calibration(
   std::getline(ifs, line);
   ss.clear();
   ss.str(line.substr(4));
-  for (int row = 0; row < 3; ++row)
+  for (uint8_t row = 0; row < 3; ++row)
   {
-    for (int col = 0; col < 4; ++col)
+    for (uint8_t col = 0; col < 4; ++col)
     {
       ss >> value;
       calibration_data.P3(row, col) = value;
@@ -74,9 +74,9 @@ bool Dataloader::load_kitti_calibration(
   std::getline(ifs, line);
   ss.clear();
   ss.str(line.substr(9));
-  for (int row = 0; row < 3; ++row)
+  for (uint8_t row = 0; row < 3; ++row)
   {
-    for (int col = 0; col < 3; ++col)
+    for (uint8_t col = 0; col < 3; ++col)
     {
       ss >> value;
       calibration_data.R0_rect(row, col) = value;
@@ -86,9 +86,9 @@ bool Dataloader::load_kitti_calibration(
   std::getline(ifs, line);
   ss.clear();
   ss.str(line.substr(16));
-  for (int row = 0; row < 3; ++row)
+  for (uint8_t row = 0; row < 3; ++row)
   {
-    for (int col = 0; col < 4; ++col)
+    for (uint8_t col = 0; col < 4; ++col)
     {
       ss >> value;
       calibration_data.velo_to_cam(row, col) = value;
@@ -98,9 +98,9 @@ bool Dataloader::load_kitti_calibration(
   std::getline(ifs, line);
   ss.clear();
   ss.str(line.substr(16));
-  for (int row = 0; row < 3; ++row)
+  for (uint8_t row = 0; row < 3; ++row)
   {
-    for (int col = 0; col < 4; ++col)
+    for (uint8_t col = 0; col < 4; ++col)
     {
       ss >> value;
       calibration_data.imu_to_velo(row, col) = value;
@@ -150,7 +150,7 @@ bool Dataloader::load_kitti_image(const std::string& image_path, cv::Mat& image)
   return 0;
 }
 
-kitti::Data Dataloader::get_kitti_data(const uint frame_count)
+kitti::Data Dataloader::get_kitti_data(const uint16_t frame_count)
 {
   kitti::Data kitti_data;
   std::string str_frame_count = std::to_string(frame_count);

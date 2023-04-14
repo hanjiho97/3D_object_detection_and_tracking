@@ -26,11 +26,11 @@ public:
     const std::string& label_path,
     std::vector<kitti::Label>& labels);
 
-  kitti::Data get_kitti_data(uint frame_count);
+  kitti::Data get_kitti_data(uint16_t frame_count);
 
 private:
-  uint string_length_;
-  uint frame_count_;
+  uint8_t string_length_;
+  uint16_t frame_count_;
   std::string kitti_root_path_;
   std::string calibration_path_;
   std::string image_path_;

@@ -16,10 +16,9 @@
 class Measurement
 {
 public:
-  Measurement();
   Measurement(
-    uint frame_count,
-    uint detection_count,
+    uint16_t frame_count,
+    uint16_t detection_count,
     const kitti::Data &kitti_data);
   virtual ~Measurement();
 
